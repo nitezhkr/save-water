@@ -1,22 +1,21 @@
-import { useState } from 'react';
-import { AlertTriangle, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { waterAudio } from './audioService';
-
-
+import { Trees, Home } from 'lucide-react';
 
 interface ChoiceComparisonProps {
   onInteract?: () => void;
 }
 
 export const ChoiceComparison: React.FC<ChoiceComparisonProps> = ({ onInteract }) => {
-  // Slider position from 0 to 100 (50 is equal split)
+  // Active slider perspective: 'nature' or 'life'
+  const [activeTab, setActiveTab] = useState<'nature' | 'life'>('nature');
   const [sliderPos, setSliderPos] = useState<number>(50);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.max(10, Math.min(rect.width - 10, e.clientX - rect.left));
+    const x = Math.max(5, Math.min(rect.width - 5, e.clientX - rect.left));
     const pct = Math.round((x / rect.width) * 100);
     setSliderPos(pct);
     if (onInteract) onInteract();
@@ -26,7 +25,7 @@ export const ChoiceComparison: React.FC<ChoiceComparisonProps> = ({ onInteract }
     setIsDragging(true);
     e.currentTarget.setPointerCapture(e.pointerId);
     handlePointerMove(e);
-    waterAudio.playWaterDrop(580);
+    waterAudio.playWaterDrop(520);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -34,95 +33,135 @@ export const ChoiceComparison: React.FC<ChoiceComparisonProps> = ({ onInteract }
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {
-      // Ignore if not captured
+      // Ignore
     }
   };
 
+  const currentWithImage =
+    activeTab === 'nature'
+      ? '/assets/journey/nature_with_water.jpg'
+      : '/assets/journey/life_with_water.jpg';
+
+  const currentWithoutImage =
+    activeTab === 'nature'
+      ? '/assets/journey/nature_without_water.jpg'
+      : '/assets/journey/life_without_water.jpg';
+
   return (
     <div className="relative w-full max-w-4xl mx-auto mt-6 pointer-events-auto">
-      {/* Interactive Drag Comparison Window */}
+      {/* 2-Slider Mode Switcher */}
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <button
+          onClick={() => {
+            setActiveTab('nature');
+            setSliderPos(50);
+            waterAudio.playWaterDrop(600);
+          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
+            activeTab === 'nature'
+              ? 'bg-white text-slate-950 font-bold shadow-lg scale-105'
+              : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+          }`}
+        >
+          <Trees className="w-3.5 h-3.5" />
+          <span>Slider 1: Nature & Rivers</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('life');
+            setSliderPos(50);
+            waterAudio.playWaterDrop(640);
+          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
+            activeTab === 'life'
+              ? 'bg-white text-slate-950 font-bold shadow-lg scale-105'
+              : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+          }`}
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span>Slider 2: Daily Human Life</span>
+        </button>
+      </div>
+
+      {/* Main Interactive Before/After Split Card */}
       <div
-        className="relative h-72 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-2xl border border-white/20 select-none cursor-ew-resize group"
+        className="relative h-72 sm:h-96 md:h-[420px] rounded-2xl overflow-hidden border border-white/20 shadow-2xl select-none cursor-ew-resize group bg-slate-950"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       >
-        {/* Right Side Background: Conservation (Natural / Calm / Cyan Glow) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/70 via-cyan-950/80 to-slate-950 flex flex-col justify-end p-6 md:p-8 text-right">
-          <div className="absolute top-6 right-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            Conscious Conservation
-          </div>
-          <div className="max-w-xs ml-auto">
-            <p className="text-emerald-400 font-mono text-3xl md:text-4xl font-bold tracking-tight">
-              +45 <span className="text-lg font-normal text-emerald-200">Litres saved/day</span>
-            </p>
-            <p className="text-slate-300 text-xs md:text-sm mt-1">
-              Turning the tap off while brushing or lathering preserves treated mountain spring water for ecosystems and future generations.
+        {/* Layer 1: Right Image (WITH WATER) */}
+        <div className="absolute inset-0">
+          <img
+            src={currentWithImage}
+            alt="Life With Water"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Subtle gradient overlay on right */}
+          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-transparent pointer-events-none" />
+
+          {/* Right Label (With Water) */}
+          <div className="absolute top-5 right-5 sm:top-6 sm:right-6 text-right z-10 pointer-events-none bg-black/60 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/10 max-w-[220px] sm:max-w-xs">
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 text-[10px] font-mono tracking-widest uppercase font-semibold">
+              WITH WATER
+            </span>
+            <p className="text-white text-xs sm:text-sm font-light mt-1">
+              {activeTab === 'nature' ? 'Lush rivers & thriving ecosystems' : 'Purity, hydration & healthy life'}
             </p>
           </div>
         </div>
 
-        {/* Left Side Layer: Waste (Amber / Dark / Warning) clipped by slider */}
+        {/* Layer 2: Left Image (WITHOUT WATER) clipped by slider */}
         <div
-          className="absolute inset-0 bg-gradient-to-r from-red-950/90 via-amber-950/80 to-slate-950 flex flex-col justify-end p-6 md:p-8 text-left transition-none"
+          className="absolute inset-0 transition-none overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
         >
-          <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
-            Unattended Running Tap
-          </div>
-          <div className="max-w-xs">
-            <p className="text-rose-400 font-mono text-3xl md:text-4xl font-bold tracking-tight">
-              -12 <span className="text-lg font-normal text-rose-200">L/min straight to drain</span>
-            </p>
-            <p className="text-slate-300 text-xs md:text-sm mt-1">
-              Treated municipal water from miles away lost in seconds. Over 17,000 litres squandered annually by a single household habit.
+          <img
+            src={currentWithoutImage}
+            alt="Life Without Water"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Subtle gradient overlay on left */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent pointer-events-none" />
+
+          {/* Left Label (Without Water) */}
+          <div className="absolute top-5 left-5 sm:top-6 sm:left-6 text-left z-10 pointer-events-none bg-black/60 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/10 max-w-[220px] sm:max-w-xs">
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-rose-500/30 text-rose-300 text-[10px] font-mono tracking-widest uppercase font-semibold">
+              WITHOUT WATER
+            </span>
+            <p className="text-white text-xs sm:text-sm font-light mt-1">
+              {activeTab === 'nature' ? 'Cracked parched earth & dead basins' : 'Dry empty taps & severe scarcity'}
             </p>
           </div>
         </div>
 
-        {/* Vertical Divider Line with Grab Handle */}
+        {/* Slider Handle Divider Line */}
         <div
-          className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)] z-30 flex items-center justify-center pointer-events-none transition-none"
+          className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_15px_rgba(255,255,255,0.9)] z-20 flex items-center justify-center pointer-events-none transition-none"
           style={{ left: `${sliderPos}%` }}
         >
-          <div className="w-10 h-10 -ml-0.5 rounded-full bg-white text-slate-900 shadow-xl flex items-center justify-center font-bold text-xs tracking-wider border-2 border-cyan-400 animate-pulse-subtle">
-            <div className="flex items-center gap-0.5">
-              <span>◀</span>
-              <span>▶</span>
-            </div>
+          <div className="w-9 h-9 rounded-full bg-white text-slate-900 shadow-2xl flex items-center justify-center text-xs font-bold tracking-widest border border-white/60">
+            <span>‹›</span>
           </div>
+        </div>
+
+        {/* Bottom Banner on the card */}
+        <div className="absolute bottom-4 left-6 right-6 z-10 flex items-center justify-between text-xs font-mono text-slate-300 pointer-events-none drop-shadow">
+          <span className="bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded">
+            ← Drag left to reveal drought
+          </span>
+          <span className="bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded">
+            Drag right to reveal abundance →
+          </span>
         </div>
       </div>
 
-      {/* Quick Interactive Toggles Below */}
-      <div className="flex items-center justify-between mt-3 text-xs text-slate-400 px-2 font-mono">
-        <button
-          onClick={() => {
-            setSliderPos(15);
-            waterAudio.playWaterDrop(480);
-          }}
-          className="flex items-center gap-1.5 hover:text-rose-300 transition-colors"
-        >
-          <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-          <span>Examine The Cost of Waste</span>
-        </button>
-
-        <span className="hidden sm:inline text-slate-500">
-          Drag slider or tap sides to compare impact
-        </span>
-
-        <button
-          onClick={() => {
-            setSliderPos(85);
-            waterAudio.playWaterDrop(720);
-          }}
-          className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors"
-        >
-          <span>Examine The Power of Saving</span>
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-        </button>
+      {/* Subtext description below */}
+      <div className="text-center mt-3 text-xs text-slate-400 font-sans">
+        {activeTab === 'nature'
+          ? 'Freshwater is finite. When rain basins dry up, entire wilderness ecosystems collapse.'
+          : 'A single home uses 140+ litres daily. When the tap stops flowing, daily survival begins.'}
       </div>
     </div>
   );

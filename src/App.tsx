@@ -1,6 +1,7 @@
 import { Navbar } from './components/Navbar';
 
 import { WaterJourneyHero } from './components/WaterJourneyHero/WaterJourneyHero';
+import { WorldRunningDry } from './components/WorldRunningDry/WorldRunningDry';
 import { WaterCalculator } from './components/WaterCalculator';
 import { OurStory } from './components/OurStory';
 import { TakeAction } from './components/TakeAction';
@@ -39,6 +40,9 @@ export function App() {
           onDiscoverFootprint={scrollToCalculator}
           onExploreClick={scrollToHero}
         />
+
+        {/* NEW SECTION: THE WORLD IS RUNNING DRY */}
+        <WorldRunningDry onHelpClick={scrollToAction} />
 
         {/* Existing / Connected Sections */}
         <WaterCalculator />

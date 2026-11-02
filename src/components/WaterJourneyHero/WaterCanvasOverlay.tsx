@@ -44,70 +44,30 @@ export const WaterCanvasOverlay: React.FC<WaterCanvasOverlayProps> = ({
     const particles: Particle[] = [];
 
     if (currentScene === 0) {
-      // Atmospheric clouds / mist
-      for (let i = 0; i < 45; i++) {
+      // Very subtle atmospheric cloud mist
+      for (let i = 0; i < 25; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: 0.15 + Math.random() * 0.35,
-          vy: (Math.random() - 0.5) * 0.1,
-          size: 40 + Math.random() * 90,
-          alpha: 0.03 + Math.random() * 0.07,
+          vx: 0.1 + Math.random() * 0.2,
+          vy: (Math.random() - 0.5) * 0.05,
+          size: 50 + Math.random() * 80,
+          alpha: 0.02 + Math.random() * 0.04,
           color: '255, 255, 255',
         });
       }
     } else if (currentScene === 1) {
-      // Rainfall
-      for (let i = 0; i < 110; i++) {
+      // Natural rain streaks
+      for (let i = 0; i < 80; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: -1.2 + Math.random() * 0.4,
-          vy: 14 + Math.random() * 12,
-          size: 1 + Math.random() * 1.5,
-          length: 18 + Math.random() * 25,
-          alpha: 0.25 + Math.random() * 0.45,
-          color: '180, 230, 255',
-        });
-      }
-    } else if (currentScene === 2) {
-      // River current shimmer
-      for (let i = 0; i < 60; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: 2 + Math.random() * 3.5,
-          vy: 1 + Math.random() * 1.5,
-          size: 2 + Math.random() * 3,
-          alpha: 0.15 + Math.random() * 0.4,
-          color: '103, 232, 249',
-        });
-      }
-    } else if (currentScene === 3) {
-      // Reservoir / pipeline energy pulses
-      for (let i = 0; i < 35; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: 1 + Math.random() * 2,
-          vy: 0,
-          size: 3 + Math.random() * 2,
-          alpha: 0.3 + Math.random() * 0.5,
-          color: '56, 189, 248',
-        });
-      }
-    } else if (currentScene === 5) {
-      // Choice: Left red/amber waste motes vs Right cyan conservation droplets
-      for (let i = 0; i < 50; i++) {
-        const isLeft = i % 2 === 0;
-        particles.push({
-          x: isLeft ? Math.random() * (width * 0.45) : width * 0.55 + Math.random() * (width * 0.45),
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: isLeft ? 1.5 + Math.random() * 2 : -0.5 - Math.random() * 1,
-          size: 2 + Math.random() * 3,
-          alpha: 0.2 + Math.random() * 0.4,
-          color: isLeft ? '248, 113, 113' : '34, 211, 238',
+          vx: -0.8 + Math.random() * 0.3,
+          vy: 12 + Math.random() * 10,
+          size: 1 + Math.random() * 0.8,
+          length: 16 + Math.random() * 20,
+          alpha: 0.15 + Math.random() * 0.25,
+          color: '220, 235, 245',
         });
       }
     }
@@ -155,12 +115,12 @@ export const WaterCanvasOverlay: React.FC<WaterCanvasOverlayProps> = ({
           p.y += p.vy;
           if (p.x - p.size > width) p.x = -p.size;
         } else if (currentScene === 1) {
-          // Rain streaks
+          // Clean rain streaks
           ctx.strokeStyle = `rgba(${p.color}, ${p.alpha})`;
           ctx.lineWidth = p.size;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p.x + (p.vx * 1.5), p.y + (p.length || 20));
+          ctx.lineTo(p.x + (p.vx * 1.5), p.y + (p.length || 18));
           ctx.stroke();
 
           p.x += p.vx;
@@ -169,60 +129,44 @@ export const WaterCanvasOverlay: React.FC<WaterCanvasOverlayProps> = ({
           if (p.y > height) {
             p.y = -20;
             p.x = Math.random() * width;
-            // Spawn tiny ground splash ripple occasionally
-            if (Math.random() < 0.08) {
+            if (Math.random() < 0.05) {
               ripplesRef.current.push({
                 x: p.x,
-                y: height - 10 - Math.random() * 40,
+                y: height - 10 - Math.random() * 30,
                 radius: 1,
-                maxRadius: 18 + Math.random() * 15,
-                alpha: 0.35,
-                speed: 1.2,
+                maxRadius: 14 + Math.random() * 10,
+                alpha: 0.25,
+                speed: 1,
               });
             }
           }
-        } else if (currentScene === 2 || currentScene === 3 || currentScene === 5) {
-          // Shimmering water motes / droplets
-          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x > width) p.x = 0;
-          if (p.x < 0) p.x = width;
-          if (p.y > height) p.y = 0;
-          if (p.y < 0) p.y = height;
         }
       }
 
-      // Render expanding Ripples
+      // Render natural expanding ripples on click
       const ripples = ripplesRef.current;
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
         r.radius += r.speed;
-        r.alpha -= 0.008;
+        r.alpha -= 0.007;
 
         if (r.alpha <= 0 || r.radius >= r.maxRadius) {
           ripples.splice(i, 1);
           continue;
         }
 
-        // Draw double concentric wave ring
         ctx.save();
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(56, 189, 248, ${r.alpha})`;
-        ctx.lineWidth = 1.8;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${r.alpha * 0.7})`;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        // Inner secondary wave
-        if (r.radius > 8) {
+        if (r.radius > 6) {
           ctx.beginPath();
-          ctx.arc(r.x, r.y, r.radius * 0.72, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(165, 243, 252, ${r.alpha * 0.6})`;
-          ctx.lineWidth = 1.2;
+          ctx.arc(r.x, r.y, r.radius * 0.75, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(186, 230, 253, ${r.alpha * 0.4})`;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
         }
         ctx.restore();
@@ -241,7 +185,7 @@ export const WaterCanvasOverlay: React.FC<WaterCanvasOverlayProps> = ({
     };
   }, [currentScene]);
 
-  // Click & Mouse move ripple spawn
+  // Click & pointer down ripple
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -250,21 +194,20 @@ export const WaterCanvasOverlay: React.FC<WaterCanvasOverlayProps> = ({
     ripplesRef.current.push({
       x,
       y,
-      radius: 4,
-      maxRadius: currentScene === 6 ? 160 : 85,
-      alpha: 0.65,
-      speed: currentScene === 6 ? 3.5 : 2.4,
+      radius: 3,
+      maxRadius: currentScene === 6 ? 140 : 70,
+      alpha: 0.5,
+      speed: currentScene === 6 ? 2.8 : 2.0,
     });
 
-    // Play subtle crystal water chime
-    waterAudio.playWaterDrop(currentScene === 6 ? 520 : 640 + Math.random() * 200);
+    waterAudio.playWaterDrop(currentScene === 6 ? 540 : 620 + Math.random() * 150);
   };
 
   return (
     <canvas
       ref={canvasRef}
       onPointerDown={handlePointerDown}
-      className="absolute inset-0 z-20 w-full h-full pointer-events-auto cursor-crosshair"
+      className="absolute inset-0 z-20 w-full h-full pointer-events-auto cursor-default"
       style={{ touchAction: 'none' }}
     />
   );
