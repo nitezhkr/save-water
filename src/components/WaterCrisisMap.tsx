@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import {
   Droplet,
   Plus,
@@ -12,6 +13,11 @@ import {
   RotateCw,
   CheckCircle,
 } from 'lucide-react';
+
+// Explicitly register the MapLibre web worker URL for Vite bundling
+if (typeof window !== 'undefined') {
+  maplibregl.setWorkerUrl(maplibreWorkerUrl);
+}
 import { MapControls, type ActiveLayers } from './MapControls';
 import { CountryInfoPanel } from './CountryInfoPanel';
 import { GlobalStatistics } from './GlobalStatistics';
@@ -345,6 +351,16 @@ export const WaterCrisisMap: React.FC = () => {
           setMapState({
             status: 'webgl-unsupported',
             error: 'WebGL context was lost or encountered a hardware acceleration problem.',
+          });
+          return;
+        }
+
+        // Check if Web Worker failed to load
+        if (msg.includes('Worker failed to load')) {
+          console.error('Fatal Web Worker load error:', e);
+          setMapState({
+            status: 'error',
+            error: 'MapLibre Web Worker failed to load. Please retry or check network settings.',
           });
           return;
         }
