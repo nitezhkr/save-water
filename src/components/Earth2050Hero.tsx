@@ -20,7 +20,7 @@ export const Earth2050Hero: React.FC<Earth2050HeroProps> = () => {
   };
 
   const scrollToNext = () => {
-    const el = document.getElementById('day-in-2050');
+    const el = document.getElementById('water-vs-population');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }

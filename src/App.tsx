@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { EveryDropNavbar } from './components/EveryDropNavbar';
 import { Earth2050Hero } from './components/Earth2050Hero';
+import { WaterVsPopulation } from './components/WaterVsPopulation';
+import { RealWorldExamples } from './components/RealWorldExamples';
 import { DayIn2050 } from './components/DayIn2050';
 import { ThenVs2050 } from './components/ThenVs2050';
-import { RealCasesSection } from './components/RealCasesSection';
 import { FutureNotInevitable } from './components/FutureNotInevitable';
 import { Calculator2050 } from './components/Calculator2050';
 import { EveryDropPledgeSection } from './components/EveryDropPledgeSection';
@@ -43,22 +44,25 @@ export function App() {
       />
 
       <main>
-        {/* 2. Earth 2050 Cinematic Hero + HUD Status Bar */}
+        {/* 2. Earth 2050 Cinematic Split Hero */}
         <Earth2050Hero
           onExperienceClick={scrollToDayIn2050}
           onChangeOutcomeClick={scrollToSolutions}
         />
 
-        {/* 3. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
+        {/* 3. Water vs. World Population (Historical & Future Imbalance) */}
+        <WaterVsPopulation />
+
+        {/* 4. Real World Examples (Cape Town, Chennai, Lake Chad) */}
+        <RealWorldExamples />
+
+        {/* 5. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
         <DayIn2050 />
 
-        {/* 4. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
+        {/* 6. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
         <ThenVs2050 />
 
-        {/* 5. Real Stories: It's Already Happening (Chennai, Cape Town, Latur) */}
-        <RealCasesSection />
-
-        {/* 6. The Choice Is Ours: But This Future Is Not Inevitable (4 Action Pillars) */}
+        {/* 7. The Choice Is Ours: But This Future Is Not Inevitable (4 Action Pillars) */}
         <FutureNotInevitable />
 
         {/* 7. Your Impact: Calculate Your Water Footprint */}
