@@ -152,9 +152,8 @@ export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
             {/* Pulsing ring aura */}
             <div className="absolute -inset-3 rounded-full bg-cyan-400/40 blur-md animate-ping" />
             <div
-              className={`w-12 h-12 rounded-full bg-slate-950/95 border-2 border-cyan-300 text-white shadow-[0_0_35px_rgba(0,229,255,0.7)] flex items-center justify-center transition-all cursor-ew-resize ${
-                isDraggingMaster ? 'scale-115 ring-4 ring-cyan-400/60' : 'hover:scale-105'
-              }`}
+              className={`w-12 h-12 rounded-full bg-slate-950/95 border-2 border-cyan-300 text-white shadow-[0_0_35px_rgba(0,229,255,0.7)] flex items-center justify-center transition-all cursor-ew-resize ${isDraggingMaster ? 'scale-115 ring-4 ring-cyan-400/60' : 'hover:scale-105'
+                }`}
             >
               <MoveHorizontal className="w-5 h-5 text-cyan-300 animate-pulse" />
             </div>
@@ -186,11 +185,10 @@ export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
           {/* Audio toggle button */}
           <button
             onClick={handleToggleAudio}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer backdrop-blur-md border ${
-              isAudioActive
-                ? 'bg-cyan-500/20 border-cyan-400/50 text-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
-                : 'bg-black/40 border-white/10 text-slate-400 hover:text-white'
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer backdrop-blur-md border ${isAudioActive
+              ? 'bg-cyan-500/20 border-cyan-400/50 text-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+              : 'bg-black/40 border-white/10 text-slate-400 hover:text-white'
+              }`}
             title={isAudioActive ? 'Mute ambient water soundscape' : 'Enable ambient water soundscape'}
           >
             {isAudioActive ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5" />}
@@ -327,11 +325,10 @@ export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
           <div className="mt-8 inline-flex items-center p-1.5 rounded-full bg-slate-900/90 border border-white/10 shadow-xl backdrop-blur-md">
             <button
               onClick={() => setActiveSliderTab('both')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
-                activeSliderTab === 'both'
-                  ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold shadow-lg'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${activeSliderTab === 'both'
+                ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold shadow-lg'
+                : 'text-slate-400 hover:text-white'
+                }`}
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Dual View (Both Sliders)</span>
@@ -339,22 +336,20 @@ export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
 
             <button
               onClick={() => setActiveSliderTab('community')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
-                activeSliderTab === 'community'
-                  ? 'bg-white text-slate-950 font-bold shadow-lg'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${activeSliderTab === 'community'
+                ? 'bg-white text-slate-950 font-bold shadow-lg'
+                : 'text-slate-400 hover:text-white'
+                }`}
             >
               <span>Slider 1: Community Land</span>
             </button>
 
             <button
               onClick={() => setActiveSliderTab('household')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
-                activeSliderTab === 'household'
-                  ? 'bg-white text-slate-950 font-bold shadow-lg'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${activeSliderTab === 'household'
+                ? 'bg-white text-slate-950 font-bold shadow-lg'
+                : 'text-slate-400 hover:text-white'
+                }`}
             >
               <span>Slider 2: Household Reality</span>
             </button>
@@ -363,11 +358,10 @@ export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
 
         {/* Sliders Container: Synchronized & Connected Grid */}
         <div
-          className={`grid gap-12 transition-all ${
-            activeSliderTab === 'both'
-              ? 'grid-cols-1 lg:grid-cols-2'
-              : 'grid-cols-1 max-w-4xl mx-auto'
-          }`}
+          className={`grid gap-12 transition-all ${activeSliderTab === 'both'
+            ? 'grid-cols-1 lg:grid-cols-2'
+            : 'grid-cols-1 max-w-4xl mx-auto'
+            }`}
         >
           {/* SLIDER 1: COMMUNITY & AGRICULTURE (LIFE WITH WATER VS SCARCITY) */}
           {(activeSliderTab === 'both' || activeSliderTab === 'community') && (

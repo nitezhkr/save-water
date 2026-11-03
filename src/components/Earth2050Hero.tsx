@@ -23,19 +23,18 @@ export const Earth2050Hero: React.FC<Earth2050HeroProps> = ({
       {/* Background Image with Cinematic Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/assets/2050/hero_bg.jpg"
+          src="/assets/2050/hero_bg.png"
           alt="Earth 2050 Water Crisis Cityscape"
-          className="w-full h-full object-cover object-top opacity-55 animate-kenburns select-none pointer-events-none"
+          className="w-full h-full object-cover object-top opacity-75 sm:opacity-85 animate-kenburns select-none pointer-events-none"
           onError={(e) => {
-            // Fallback to journey image if needed
-            (e.currentTarget as HTMLImageElement).src = '/assets/journey/community_without_water.jpg';
+            (e.currentTarget as HTMLImageElement).src = '/assets/2050/hero_bg.jpg';
           }}
         />
-        {/* Gradients to blend seamlessly into dark background */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030914] via-[#030914]/40 to-[#030914]/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#030914]/90 via-[#030914]/50 to-[#030914]/80" />
+        {/* Gradients to blend seamlessly into dark background while preserving artwork */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030914] via-[#030914]/25 to-[#030914]/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#030914]/90 via-[#030914]/50 to-transparent" />
         
-        {/* Subtle orange/amber dystopian glow on the horizon */}
+        {/* Subtle dystopian warm accent glow */}
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       </div>
