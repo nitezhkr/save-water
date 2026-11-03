@@ -1,0 +1,111 @@
+[
+  {
+    "id": "chennai",
+    "countryId": "IND",
+    "title": "Chennai's Day Zero Warning",
+    "location": "Chennai, Tamil Nadu, India",
+    "year": "2019",
+    "summary": "In June 2019, Chennai's four main surface water reservoirs dropped to under 0.2% of total capacity, cutting municipal piped supply by half and forcing 10 million citizens to rely on 4,000+ daily tanker trucks.",
+    "metrics": [
+      { "label": "Reservoir Storage", "value": "< 0.2%" },
+      { "label": "Emergency Tankers", "value": "4,000+ Daily" },
+      { "label": "Population Impacted", "value": "10 Million" }
+    ],
+    "keyLessons": [
+      "Mandatory rooftop rainwater harvesting on all residential structures.",
+      "Restoration of over 200 ancient wetland storage bodies and temple tanks.",
+      "Deployment of tertiary treated reverse osmosis (TTRO) plants for industrial water reuse."
+    ]
+  },
+  {
+    "id": "capetown",
+    "countryId": "ZAF",
+    "title": "Cape Town Day Zero Averted",
+    "location": "Cape Town, South Africa",
+    "year": "2015 – 2018",
+    "summary": "Following a record 1-in-300-year drought, dam levels fell below 20%. Citywide civic discipline and strict 50L/person quotas halved municipal water consumption within months, preventing full system collapse.",
+    "metrics": [
+      { "label": "Reservoir Drop", "value": "~87%" },
+      { "label": "Daily Ration Quota", "value": "50 L / person" },
+      { "label": "Consumption Cut", "value": "> 50%" }
+    ],
+    "keyLessons": [
+      "Transparent civic communication using real-time reservoir countdown dashboards.",
+      "Eradicating water-intensive invasive tree species in mountain catchment basins.",
+      "Expanding deep groundwater drilling into the Table Mountain aquifer group."
+    ]
+  },
+  {
+    "id": "lakemead",
+    "countryId": "USA",
+    "title": "Colorado River & Lake Mead Crisis",
+    "location": "Nevada & Arizona, United States",
+    "year": "2000 – Present",
+    "summary": "Lake Mead, the largest reservoir in the United States, plunged to 27% capacity in 2022 amid a 23-year megadrought, forcing unprecedented tier-2 federal water cuts across 7 basin states and Mexico.",
+    "metrics": [
+      { "label": "Lowest Elevation", "value": "1,040 ft (27% cap)" },
+      { "label": "Dependent Population", "value": "40 Million" },
+      { "label": "Farmland Irrigated", "value": "5.5 Million Acres" }
+    ],
+    "keyLessons": [
+      "Multistate agreements compensated farmers for voluntary fallowing of alfalfa fields.",
+      "Las Vegas implemented aggressive turf buyback programs cutting indoor water consumption.",
+      "Installation of low-level pumping intake pipes beneath previous dead-pool levels."
+    ]
+  },
+  {
+    "id": "lakechad",
+    "countryId": "TCD",
+    "title": "Lake Chad Basin Desiccation",
+    "location": "Chad, Cameroon, Niger & Nigeria",
+    "year": "1960s – Present",
+    "summary": "Lake Chad has lost ~90% of its surface area due to persistent climate droughts and unsustainable irrigation diversions, triggering mass economic displacement and local conflict for over 30 million people.",
+    "metrics": [
+      { "label": "Area Loss", "value": "~90%" },
+      { "label": "People Affected", "value": "30 Million" },
+      { "label": "Basin Countries", "value": "4 Primary Nations" }
+    ],
+    "keyLessons": [
+      "Transboundary water basin commission (LCBC) harmonizing irrigation withdrawals.",
+      "Transitioning to climate-resilient agro-ecology and solar-powered micro-drip systems.",
+      "Restoring indigenous drought-tolerant crops to reduce irrigation water dependency."
+    ]
+  },
+  {
+    "id": "yemensanaa",
+    "countryId": "YEM",
+    "title": "Sana'a Basin Groundwater Collapse",
+    "location": "Sana'a, Yemen",
+    "year": "Ongoing",
+    "summary": "Unchecked artesian borewell extraction for thirsty qat agriculture has caused the Sana'a water table to fall by 6 to 8 meters every year, putting the city at risk of total groundwater depletion.",
+    "metrics": [
+      { "label": "Water Table Drop", "value": "6–8 m / year" },
+      { "label": "Needing Water Aid", "value": "15.3 Million" },
+      { "label": "Agricultural Share", "value": "90% of Water" }
+    ],
+    "keyLessons": [
+      "Converting diesel pumps to autonomous solar micro-grids to limit excessive pumping.",
+      "Reviving historical stepped-terrace water catchment walls in highland valleys.",
+      "Emergency municipal water distribution and community chlorination kits."
+    ]
+  },
+  {
+    "id": "jordanamman",
+    "countryId": "JOR",
+    "title": "Jordan Highlands Structural Scarcity",
+    "location": "Amman & Jordan Highlands",
+    "year": "Documented 2000 – Present",
+    "summary": "With under 61 m³ of renewable water per person annually (88% below UN scarcity lines), Jordan distributes piped water only once weekly, requiring rooftop collection tanks on every home.",
+    "metrics": [
+      { "label": "Per Capita Water", "value": "61 m³ / year" },
+      { "label": "Supply Schedule", "value": "12–24h / week" },
+      { "label": "Non-Revenue Leaks", "value": "~45% in pipes" }
+    ],
+    "keyLessons": [
+      "Acoustic leak detection deployed across municipal pipelines to recover lost water.",
+      "Treating 100% of municipal wastewater for agricultural reuse in the Jordan Valley.",
+      "Construction of the National Water Carrier Red Sea desalination pipeline."
+    ]
+  }
+]
+

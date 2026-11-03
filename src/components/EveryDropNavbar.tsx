@@ -23,8 +23,9 @@ export const EveryDropNavbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { label: 'Home', href: '#hero' },
-    { label: 'Experience 2050', href: '#day-in-2050' },
+    { label: 'Crisis Map', href: '#crisis-map' },
     { label: 'Real Cases', href: '#real-cases' },
+    { label: 'Experience 2050', href: '#day-in-2050' },
     { label: 'Solutions', href: '#solutions' },
     { label: 'Resources', href: '#calculator' },
     { label: 'Take Action', href: '#pledge' },

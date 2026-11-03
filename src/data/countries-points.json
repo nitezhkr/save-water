@@ -1,0 +1,299 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "IND",
+        "name": "India",
+        "continent": "ASIA",
+        "flag": "\u00f0\u0178\u2021\u00ae\u00f0\u0178\u2021\u00b3",
+        "stressScore": 74,
+        "stressLevel": "High (40 \u00e2\u20ac\u201c 80%)",
+        "severity": "high",
+        "groundwater": 61,
+        "access": 93
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.9629,
+          20.5937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ZAF",
+        "name": "South Africa",
+        "continent": "AFRICA",
+        "flag": "\u00f0\u0178\u2021\u00bf\u00f0\u0178\u2021\u00a6",
+        "stressScore": 68,
+        "stressLevel": "High (40 \u00e2\u20ac\u201c 80%)",
+        "severity": "high",
+        "groundwater": 54,
+        "access": 91
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.9375,
+          -30.5595
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "USA",
+        "name": "United States",
+        "continent": "NORTH AMERICA",
+        "flag": "\u00f0\u0178\u2021\u00ba\u00f0\u0178\u2021\u00b8",
+        "stressScore": 38,
+        "stressLevel": "Medium to High (20 \u00e2\u20ac\u201c 40%)",
+        "severity": "medium-high",
+        "groundwater": 48,
+        "access": 99
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.7129,
+          37.0902
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "YEM",
+        "name": "Yemen",
+        "continent": "MIDDLE EAST",
+        "flag": "\u00f0\u0178\u2021\u00be\u00f0\u0178\u2021\u00aa",
+        "stressScore": 92,
+        "stressLevel": "Extremely High (> 80%)",
+        "severity": "extremely-high",
+        "groundwater": 88,
+        "access": 55
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.5164,
+          15.5527
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "JOR",
+        "name": "Jordan",
+        "continent": "MIDDLE EAST",
+        "flag": "\u00f0\u0178\u2021\u00af\u00f0\u0178\u2021\u00b4",
+        "stressScore": 95,
+        "stressLevel": "Extremely High (> 80%)",
+        "severity": "extremely-high",
+        "groundwater": 84,
+        "access": 97
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.2384,
+          30.5852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "TCD",
+        "name": "Chad",
+        "continent": "AFRICA",
+        "flag": "\u00f0\u0178\u2021\u00b9\u00f0\u0178\u2021\u00a9",
+        "stressScore": 72,
+        "stressLevel": "High (40 \u00e2\u20ac\u201c 80%)",
+        "severity": "high",
+        "groundwater": 58,
+        "access": 52
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.7322,
+          15.4542
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "EGY",
+        "name": "Egypt",
+        "continent": "AFRICA",
+        "flag": "\u00f0\u0178\u2021\u00aa\u00f0\u0178\u2021\u00ac",
+        "stressScore": 88,
+        "stressLevel": "Extremely High (> 80%)",
+        "severity": "extremely-high",
+        "groundwater": 65,
+        "access": 98
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.8025,
+          26.8206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SAU",
+        "name": "Saudi Arabia",
+        "continent": "MIDDLE EAST",
+        "flag": "\u00f0\u0178\u2021\u00b8\u00f0\u0178\u2021\u00a6",
+        "stressScore": 98,
+        "stressLevel": "Extremely High (> 80%)",
+        "severity": "extremely-high",
+        "groundwater": 90,
+        "access": 99
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          45.0792,
+          23.8859
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ESP",
+        "name": "Spain",
+        "continent": "EUROPE",
+        "flag": "\u00f0\u0178\u2021\u00aa\u00f0\u0178\u2021\u00b8",
+        "stressScore": 64,
+        "stressLevel": "High (40 \u00e2\u20ac\u201c 80%)",
+        "severity": "high",
+        "groundwater": 52,
+        "access": 99
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7492,
+          40.4637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CHL",
+        "name": "Chile",
+        "continent": "SOUTH AMERICA",
+        "flag": "\u00f0\u0178\u2021\u00a8\u00f0\u0178\u2021\u00b1",
+        "stressScore": 84,
+        "stressLevel": "Extremely High (> 80%)",
+        "severity": "extremely-high",
+        "groundwater": 70,
+        "access": 99
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.543,
+          -35.6751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "AUS",
+        "name": "Australia",
+        "continent": "OCEANIA",
+        "flag": "\u00f0\u0178\u2021\u00a6\u00f0\u0178\u2021\u00ba",
+        "stressScore": 36,
+        "stressLevel": "Medium to High (20 \u00e2\u20ac\u201c 40%)",
+        "severity": "medium-high",
+        "groundwater": 42,
+        "access": 99
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          133.7751,
+          -25.2744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CHN",
+        "name": "China",
+        "continent": "ASIA",
+        "flag": "\u00f0\u0178\u2021\u00a8\u00f0\u0178\u2021\u00b3",
+        "stressScore": 34,
+        "stressLevel": "Medium to High (20 \u00e2\u20ac\u201c 40%)",
+        "severity": "medium-high",
+        "groundwater": 60,
+        "access": 94
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.1954,
+          35.8617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "BRA",
+        "name": "Brazil",
+        "continent": "SOUTH AMERICA",
+        "flag": "\u00f0\u0178\u2021\u00a7\u00f0\u0178\u2021\u00b7",
+        "stressScore": 8,
+        "stressLevel": "Low (< 10%)",
+        "severity": "low",
+        "groundwater": 18,
+        "access": 90
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -51.9253,
+          -14.235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DEU",
+        "name": "Germany",
+        "continent": "EUROPE",
+        "flag": "\u00f0\u0178\u2021\u00a9\u00f0\u0178\u2021\u00aa",
+        "stressScore": 14,
+        "stressLevel": "Low to Medium (10 \u00e2\u20ac\u201c 20%)",
+        "severity": "low-medium",
+        "groundwater": 22,
+        "access": 100
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.4515,
+          51.1657
+        ]
+      }
+    }
+  ]
+}

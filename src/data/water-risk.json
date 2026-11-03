@@ -1,0 +1,157 @@
+{
+  "IND": {
+    "stressLevel": "High (40 – 80%)",
+    "stressScore": 74,
+    "stressLabel": "High (70–80%)",
+    "severity": "high",
+    "groundwaterDepletion": 61,
+    "accessToSafeWater": 93,
+    "droughtRisk": "High",
+    "populationFallback": "1.44 Billion",
+    "source": "WRI Aqueduct (2019) • World Bank (2022)"
+  },
+  "ZAF": {
+    "stressLevel": "High (40 – 80%)",
+    "stressScore": 68,
+    "stressLabel": "High (60–70%)",
+    "severity": "high",
+    "groundwaterDepletion": 54,
+    "accessToSafeWater": 91,
+    "droughtRisk": "Extremely High",
+    "populationFallback": "60.4 Million",
+    "source": "WRI Aqueduct (2019) • World Bank (2022)"
+  },
+  "USA": {
+    "stressLevel": "Medium to High (20 – 40%)",
+    "stressScore": 38,
+    "stressLabel": "Medium to High (35–45%)",
+    "severity": "medium-high",
+    "groundwaterDepletion": 48,
+    "accessToSafeWater": 99,
+    "droughtRisk": "High in Southwest",
+    "populationFallback": "335 Million",
+    "source": "WRI Aqueduct (2019) • USGS (2020)"
+  },
+  "YEM": {
+    "stressLevel": "Extremely High (> 80%)",
+    "stressScore": 92,
+    "stressLabel": "Extremely High (> 90%)",
+    "severity": "extremely-high",
+    "groundwaterDepletion": 88,
+    "accessToSafeWater": 55,
+    "droughtRisk": "Critical",
+    "populationFallback": "34.4 Million",
+    "source": "WRI Aqueduct (2019) • UNICEF (2023)"
+  },
+  "JOR": {
+    "stressLevel": "Extremely High (> 80%)",
+    "stressScore": 95,
+    "stressLabel": "Extremely High (> 95%)",
+    "severity": "extremely-high",
+    "groundwaterDepletion": 84,
+    "accessToSafeWater": 97,
+    "droughtRisk": "Critical",
+    "populationFallback": "11.3 Million",
+    "source": "WRI Aqueduct (2019) • MWI Jordan (2023)"
+  },
+  "TCD": {
+    "stressLevel": "High (40 – 80%)",
+    "stressScore": 72,
+    "stressLabel": "High (70–80%)",
+    "severity": "high",
+    "groundwaterDepletion": 58,
+    "accessToSafeWater": 52,
+    "droughtRisk": "Extremely High",
+    "populationFallback": "18.3 Million",
+    "source": "WRI Aqueduct (2019) • UN-Water (2022)"
+  },
+  "EGY": {
+    "stressLevel": "Extremely High (> 80%)",
+    "stressScore": 88,
+    "stressLabel": "Extremely High (> 85%)",
+    "severity": "extremely-high",
+    "groundwaterDepletion": 65,
+    "accessToSafeWater": 98,
+    "droughtRisk": "High",
+    "populationFallback": "112.7 Million",
+    "source": "WRI Aqueduct (2019) • World Bank (2022)"
+  },
+  "SAU": {
+    "stressLevel": "Extremely High (> 80%)",
+    "stressScore": 98,
+    "stressLabel": "Extremely High (> 95%)",
+    "severity": "extremely-high",
+    "groundwaterDepletion": 90,
+    "accessToSafeWater": 99,
+    "droughtRisk": "Extreme",
+    "populationFallback": "36.9 Million",
+    "source": "WRI Aqueduct (2019) • World Bank (2022)"
+  },
+  "ESP": {
+    "stressLevel": "High (40 – 80%)",
+    "stressScore": 64,
+    "stressLabel": "High (60–70%)",
+    "severity": "high",
+    "groundwaterDepletion": 52,
+    "accessToSafeWater": 99,
+    "droughtRisk": "High in South",
+    "populationFallback": "48.1 Million",
+    "source": "WRI Aqueduct (2019) • Eurostat (2023)"
+  },
+  "CHL": {
+    "stressLevel": "Extremely High (> 80%)",
+    "stressScore": 84,
+    "stressLabel": "Extremely High (80–90%)",
+    "severity": "extremely-high",
+    "groundwaterDepletion": 70,
+    "accessToSafeWater": 99,
+    "droughtRisk": "Severe",
+    "populationFallback": "19.6 Million",
+    "source": "WRI Aqueduct (2019) • DGA Chile (2023)"
+  },
+  "AUS": {
+    "stressLevel": "Medium to High (20 – 40%)",
+    "stressScore": 36,
+    "stressLabel": "Medium to High (30–40%)",
+    "severity": "medium-high",
+    "groundwaterDepletion": 42,
+    "accessToSafeWater": 99,
+    "droughtRisk": "Extremely High",
+    "populationFallback": "26.4 Million",
+    "source": "WRI Aqueduct (2019) • BOM Australia (2023)"
+  },
+  "CHN": {
+    "stressLevel": "Medium to High (20 – 40%)",
+    "stressScore": 34,
+    "stressLabel": "High in North (> 70%)",
+    "severity": "medium-high",
+    "groundwaterDepletion": 60,
+    "accessToSafeWater": 94,
+    "droughtRisk": "High in North",
+    "populationFallback": "1.41 Billion",
+    "source": "WRI Aqueduct (2019) • World Bank (2022)"
+  },
+  "BRA": {
+    "stressLevel": "Low (< 10%)",
+    "stressScore": 8,
+    "stressLabel": "Low (< 10% National)",
+    "severity": "low",
+    "groundwaterDepletion": 18,
+    "accessToSafeWater": 90,
+    "droughtRisk": "High in Northeast",
+    "populationFallback": "215 Million",
+    "source": "WRI Aqueduct (2019) • ANA Brazil (2022)"
+  },
+  "DEU": {
+    "stressLevel": "Low to Medium (10 – 20%)",
+    "stressScore": 14,
+    "stressLabel": "Low to Medium (12–18%)",
+    "severity": "low-medium",
+    "groundwaterDepletion": 22,
+    "accessToSafeWater": 100,
+    "droughtRisk": "Moderate",
+    "populationFallback": "84.4 Million",
+    "source": "WRI Aqueduct (2019) • UBA Germany (2023)"
+  }
+}
+

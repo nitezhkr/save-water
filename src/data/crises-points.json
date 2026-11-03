@@ -1,0 +1,119 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "chennai",
+        "name": "Chennai Day Zero",
+        "country": "India",
+        "year": "2019",
+        "lat": 13.0827,
+        "lng": 80.2707,
+        "detail": "Reservoirs fell below 0.2% storage, cutting municipal water supply by 50% for 10M residents."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.2707,
+          13.0827
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "capetown",
+        "name": "Cape Town Day Zero",
+        "country": "South Africa",
+        "year": "2018",
+        "lat": -33.9249,
+        "lng": 18.4241,
+        "detail": "Three-year drought forced citywide 50L/day water quotas to avert tap shut-off."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.4241,
+          -33.9249
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lakechad",
+        "name": "Lake Chad Desiccation",
+        "country": "Sahel Africa",
+        "year": "1960s \u2013 Present",
+        "lat": 13.0,
+        "lng": 14.5,
+        "detail": "Lake has shrunk by 90% from climate droughts and upstream irrigation diversions."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.5,
+          13.0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lakemead",
+        "name": "Lake Mead & Colorado River",
+        "country": "United States",
+        "year": "2000 \u2013 Present",
+        "lat": 36.015,
+        "lng": -114.7378,
+        "detail": "23-year megadrought lowered reservoir to 27% capacity, triggering tier-2 federal water cuts."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.7378,
+          36.015
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "yemensanaa",
+        "name": "Sana\u2019a Aquifer Depletion",
+        "country": "Yemen",
+        "year": "Ongoing",
+        "lat": 15.3694,
+        "lng": 44.191,
+        "detail": "Groundwater level falling 6-8 meters annually from unmetered qat irrigation."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          44.191,
+          15.3694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jordanamman",
+        "name": "Jordan Highland Scarcity",
+        "country": "Jordan",
+        "year": "Ongoing",
+        "lat": 31.9539,
+        "lng": 35.9106,
+        "detail": "Annual renewable water per capita at 61 m3; tap water rationed to once weekly."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.9106,
+          31.9539
+        ]
+      }
+    }
+  ]
+}
