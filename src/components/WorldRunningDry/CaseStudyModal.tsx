@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, AlertTriangle, CheckCircle, ExternalLink, ShieldCheck, MapPin, Droplet, ArrowRight } from 'lucide-react';
+import { X, Calendar, AlertTriangle, CheckCircle, ShieldCheck, MapPin, ArrowRight } from 'lucide-react';
 import type { CaseStudy } from './caseStudiesData';
 
 interface CaseStudyModalProps {

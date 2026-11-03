@@ -3,8 +3,8 @@
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-display: 'Syne', sans-serif;
-    --font-serif: 'Cinzel', serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-editorial: 'Cinzel', serif;
     color-scheme: dark;
   }
 
@@ -24,8 +24,8 @@
 }
 
 /* Custom Typography Utility */
-.font-display {
-  font-family: 'Syne', var(--font-sans), sans-serif;
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
 }
 
 .font-editorial {

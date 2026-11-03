@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Droplets,
   Layers,
-  Sparkles,
   ChevronDown,
   Compass,
   MoveHorizontal,
@@ -22,7 +21,6 @@ interface WaterJourneyHeroProps {
 
 export const WaterJourneyHero: React.FC<WaterJourneyHeroProps> = ({
   onDiscoverFootprint,
-  onExploreClick,
 }) => {
   const [isAudioActive, setIsAudioActive] = useState<boolean>(false);
   const [masterSplitPos, setMasterSplitPos] = useState<number>(50);

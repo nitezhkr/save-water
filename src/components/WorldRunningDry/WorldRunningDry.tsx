@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -9,9 +9,6 @@ import {
   Globe,
   Droplets,
   BookOpen,
-  Calendar,
-  AlertCircle,
-  ExternalLink,
 } from 'lucide-react';
 import { CASE_STUDIES, type CaseStudy } from './caseStudiesData';
 import { CaseStudyModal } from './CaseStudyModal';

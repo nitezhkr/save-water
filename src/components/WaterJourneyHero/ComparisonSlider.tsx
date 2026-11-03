@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, AlertTriangle, Droplets, Volume2, MoveHorizontal } from 'lucide-react';
+import { Droplets, MoveHorizontal } from 'lucide-react';
 import { waterAudio } from './audioService';
 
 export interface ComparisonSliderProps {

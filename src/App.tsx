@@ -1,29 +1,34 @@
-import { Navbar } from './components/Navbar';
-
-import { WaterJourneyHero } from './components/WaterJourneyHero/WaterJourneyHero';
-import { WorldRunningDry } from './components/WorldRunningDry/WorldRunningDry';
-import { WaterCalculator } from './components/WaterCalculator';
-import { OurStory } from './components/OurStory';
-import { TakeAction } from './components/TakeAction';
-import { Footer } from './components/Footer';
+import { useState } from 'react';
+import { EveryDropNavbar } from './components/EveryDropNavbar';
+import { Earth2050Hero } from './components/Earth2050Hero';
+import { DayIn2050 } from './components/DayIn2050';
+import { ThenVs2050 } from './components/ThenVs2050';
+import { RealCasesSection } from './components/RealCasesSection';
+import { FutureNotInevitable } from './components/FutureNotInevitable';
+import { Calculator2050 } from './components/Calculator2050';
+import { EveryDropPledgeSection } from './components/EveryDropPledgeSection';
+import { EveryDropFooter } from './components/EveryDropFooter';
+import { SearchModal } from './components/SearchModal';
 
 export function App() {
-  const scrollToCalculator = () => {
-    const el = document.getElementById('calculator');
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const scrollToPledge = () => {
+    const el = document.getElementById('pledge');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const scrollToHero = () => {
-    const el = document.getElementById('journey-hero');
+  const scrollToDayIn2050 = () => {
+    const el = document.getElementById('day-in-2050');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const scrollToAction = () => {
-    const el = document.getElementById('action');
+  const scrollToSolutions = () => {
+    const el = document.getElementById('solutions');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -31,27 +36,46 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#030914] text-slate-100 font-sans selection:bg-cyan-500 selection:text-white">
-      {/* Top Editorial Navigation */}
-      <Navbar onSaveWaterClick={scrollToAction} />
+      {/* 1. Header / Navbar */}
+      <EveryDropNavbar
+        onJoinClick={scrollToPledge}
+        onSearchClick={() => setSearchOpen(true)}
+      />
 
-      {/* Main Hero: THE JOURNEY OF EVERY DROP */}
       <main>
-        <WaterJourneyHero
-          onDiscoverFootprint={scrollToCalculator}
-          onExploreClick={scrollToHero}
+        {/* 2. Earth 2050 Cinematic Hero + HUD Status Bar */}
+        <Earth2050Hero
+          onExperienceClick={scrollToDayIn2050}
+          onChangeOutcomeClick={scrollToSolutions}
         />
 
-        {/* NEW SECTION: THE WORLD IS RUNNING DRY */}
-        <WorldRunningDry onHelpClick={scrollToAction} />
+        {/* 3. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
+        <DayIn2050 />
 
-        {/* Existing / Connected Sections */}
-        <WaterCalculator />
-        <OurStory />
-        <TakeAction />
+        {/* 4. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
+        <ThenVs2050 />
+
+        {/* 5. Real Stories: It's Already Happening (Chennai, Cape Town, Latur) */}
+        <RealCasesSection />
+
+        {/* 6. The Choice Is Ours: But This Future Is Not Inevitable (4 Action Pillars) */}
+        <FutureNotInevitable />
+
+        {/* 7. Your Impact: Calculate Your Water Footprint */}
+        <Calculator2050 />
+
+        {/* 8. Take Action: Take the Every Drop Pledge */}
+        <EveryDropPledgeSection />
       </main>
 
-      {/* Editorial Footer */}
-      <Footer />
+      {/* 9. Footer */}
+      <EveryDropFooter />
+
+      {/* Global Quick Search Modal */}
+      <SearchModal
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
     </div>
   );
 }
