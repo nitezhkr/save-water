@@ -63,17 +63,17 @@ export function App() {
         {/* 6. Solutions: The Future Is Not Written Yet (Interactive Solutions & Action Choices) */}
         <FutureSolutionsSection />
 
-        {/* 7. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
+        {/* 7. Take Action: The Change Starts With You (Pledge & Global Movement) */}
+        <EveryDropPledgeSection />
+
+        {/* 8. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
         <DayIn2050 />
 
-        {/* 8. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
+        {/* 9. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
         <ThenVs2050 />
 
-        {/* 9. Your Impact: Calculate Your Water Footprint */}
+        {/* 10. Your Impact: Calculate Your Water Footprint */}
         <Calculator2050 />
-
-        {/* 8. Take Action: Take the Every Drop Pledge */}
-        <EveryDropPledgeSection />
       </main>
 
       {/* 9. Footer */}
