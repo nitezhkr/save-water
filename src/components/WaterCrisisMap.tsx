@@ -87,8 +87,8 @@ export const WaterCrisisMap: React.FC = () => {
     setRetryKey((k) => k + 1);
   };
 
-  // Selected Country - default to India (IND) matching the mockup!
-  const [selectedCountryId, setSelectedCountryId] = useState<string | null>('IND');
+  // Selected Country - start with null so the map has maximum room and visibility!
+  const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
 
   // Active layers state
@@ -98,6 +98,10 @@ export const WaterCrisisMap: React.FC = () => {
     groundwaterDepletion: false,
     historicalCrises: true,
   });
+  const layersRef = useRef(layers);
+  useEffect(() => {
+    layersRef.current = layers;
+  }, [layers]);
 
   // Track map markers to update positions
   const markersRef = useRef<maplibregl.Marker[]>([]);
@@ -154,8 +158,8 @@ export const WaterCrisisMap: React.FC = () => {
         container: mapContainer.current,
         // OpenFreeMap dark vector basemap
         style: 'https://tiles.openfreemap.org/styles/dark',
-        center: [20, 22],
-        zoom: 1.8,
+        center: [15, 20],
+        zoom: 1.85,
         minZoom: 1.2,
         maxZoom: 10,
         attributionControl: false,
@@ -165,31 +169,35 @@ export const WaterCrisisMap: React.FC = () => {
 
       const setupLayers = () => {
         if (!isMounted || !mapInstance || mapInstance !== map.current) return;
-        if (!mapInstance.getStyle()) return;
+        const currentMap = mapInstance;
+        if (!currentMap.getStyle()) return;
 
         try {
           // 1. Add Countries Points GeoJSON Source
-          if (!mapInstance.getSource('water-countries')) {
-            mapInstance.addSource('water-countries', {
+          if (!currentMap.getSource('water-countries')) {
+            currentMap.addSource('water-countries', {
               type: 'geojson',
               data: countriesGeo as unknown as maplibregl.GeoJSONSourceSpecification['data'],
             });
           }
 
           // 2. Add Crises Points GeoJSON Source
-          if (!mapInstance.getSource('water-crises')) {
-            mapInstance.addSource('water-crises', {
+          if (!currentMap.getSource('water-crises')) {
+            currentMap.addSource('water-crises', {
               type: 'geojson',
               data: crisesGeo as unknown as maplibregl.GeoJSONSourceSpecification['data'],
             });
           }
 
-          // 3. Water Stress Glow Halo Layer
-          if (!mapInstance.getLayer('stress-halos')) {
-            mapInstance.addLayer({
+          // 3. Water Stress Glow Halo Layer (Cyan to Red)
+          if (!currentMap.getLayer('stress-halos')) {
+            currentMap.addLayer({
               id: 'stress-halos',
               type: 'circle',
               source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.waterStress ? 'visible' : 'none',
+              },
               paint: {
                 'circle-radius': [
                   'interpolate',
@@ -220,11 +228,14 @@ export const WaterCrisisMap: React.FC = () => {
           }
 
           // 4. Core Water Stress Heat Dots
-          if (!mapInstance.getLayer('stress-cores')) {
-            mapInstance.addLayer({
+          if (!currentMap.getLayer('stress-cores')) {
+            currentMap.addLayer({
               id: 'stress-cores',
               type: 'circle',
               source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.waterStress ? 'visible' : 'none',
+              },
               paint: {
                 'circle-radius': [
                   'interpolate',
@@ -250,60 +261,230 @@ export const WaterCrisisMap: React.FC = () => {
                 ],
                 'circle-stroke-width': 1.5,
                 'circle-stroke-color': '#ffffff',
-                'circle-opacity': 0.85,
-              },
-            });
-          }
-
-          // 5. Crisis Markers Layer (Red Alert Dots)
-          if (!mapInstance.getLayer('crisis-points')) {
-            mapInstance.addLayer({
-              id: 'crisis-points',
-              type: 'circle',
-              source: 'water-crises',
-              paint: {
-                'circle-radius': 8,
-                'circle-color': '#ef4444',
-                'circle-stroke-width': 2,
-                'circle-stroke-color': '#ffffff',
                 'circle-opacity': 0.9,
               },
             });
           }
 
-          // 6. Highlight boundary outlines with subtle cyan if supported by basemap
+          // 5. Drought Risk Glow Halo Layer (Amber / Warm Orange / Crimson)
+          if (!currentMap.getLayer('drought-halos')) {
+            currentMap.addLayer({
+              id: 'drought-halos',
+              type: 'circle',
+              source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.droughtRisk ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  1,
+                  ['*', ['get', 'droughtScore'], 0.35],
+                  5,
+                  ['*', ['get', 'droughtScore'], 1.3],
+                ],
+                'circle-color': [
+                  'step',
+                  ['get', 'droughtScore'],
+                  '#fde047',
+                  50,
+                  '#fbbf24',
+                  70,
+                  '#f97316',
+                  85,
+                  '#dc2626',
+                ],
+                'circle-opacity': 0.38,
+                'circle-blur': 0.65,
+              },
+            });
+          }
+
+          // 6. Drought Risk Core Dots
+          if (!currentMap.getLayer('drought-cores')) {
+            currentMap.addLayer({
+              id: 'drought-cores',
+              type: 'circle',
+              source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.droughtRisk ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  1,
+                  ['*', ['get', 'droughtScore'], 0.18],
+                  5,
+                  ['*', ['get', 'droughtScore'], 0.58],
+                ],
+                'circle-color': [
+                  'step',
+                  ['get', 'droughtScore'],
+                  '#fde047',
+                  50,
+                  '#fbbf24',
+                  70,
+                  '#f97316',
+                  85,
+                  '#dc2626',
+                ],
+                'circle-stroke-width': 1.5,
+                'circle-stroke-color': '#fef08a',
+                'circle-opacity': 0.9,
+              },
+            });
+          }
+
+          // 7. Groundwater Depletion Glow Halo Layer (Sky / Indigo / Purple / Magenta)
+          if (!currentMap.getLayer('groundwater-halos')) {
+            currentMap.addLayer({
+              id: 'groundwater-halos',
+              type: 'circle',
+              source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.groundwaterDepletion ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  1,
+                  ['*', ['get', 'groundwater'], 0.35],
+                  5,
+                  ['*', ['get', 'groundwater'], 1.3],
+                ],
+                'circle-color': [
+                  'step',
+                  ['get', 'groundwater'],
+                  '#38bdf8',
+                  35,
+                  '#818cf8',
+                  55,
+                  '#a855f7',
+                  75,
+                  '#ec4899',
+                ],
+                'circle-opacity': 0.38,
+                'circle-blur': 0.65,
+              },
+            });
+          }
+
+          // 8. Groundwater Depletion Core Dots
+          if (!currentMap.getLayer('groundwater-cores')) {
+            currentMap.addLayer({
+              id: 'groundwater-cores',
+              type: 'circle',
+              source: 'water-countries',
+              layout: {
+                visibility: layersRef.current.groundwaterDepletion ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  1,
+                  ['*', ['get', 'groundwater'], 0.18],
+                  5,
+                  ['*', ['get', 'groundwater'], 0.58],
+                ],
+                'circle-color': [
+                  'step',
+                  ['get', 'groundwater'],
+                  '#38bdf8',
+                  35,
+                  '#818cf8',
+                  55,
+                  '#a855f7',
+                  75,
+                  '#ec4899',
+                ],
+                'circle-stroke-width': 1.5,
+                'circle-stroke-color': '#e0e7ff',
+                'circle-opacity': 0.9,
+              },
+            });
+          }
+
+          // 9. Crisis Hotspots Outer Glow Halos (Pulsing Red)
+          if (!currentMap.getLayer('crisis-halos')) {
+            currentMap.addLayer({
+              id: 'crisis-halos',
+              type: 'circle',
+              source: 'water-crises',
+              layout: {
+                visibility: layersRef.current.historicalCrises ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': 16,
+                'circle-color': '#ef4444',
+                'circle-opacity': 0.35,
+                'circle-blur': 0.5,
+              },
+            });
+          }
+
+          // 10. Crisis Hotspot Core Markers (Red Alert Dots with white border)
+          if (!currentMap.getLayer('crisis-points')) {
+            currentMap.addLayer({
+              id: 'crisis-points',
+              type: 'circle',
+              source: 'water-crises',
+              layout: {
+                visibility: layersRef.current.historicalCrises ? 'visible' : 'none',
+              },
+              paint: {
+                'circle-radius': 7.5,
+                'circle-color': '#ef4444',
+                'circle-stroke-width': 2,
+                'circle-stroke-color': '#ffffff',
+                'circle-opacity': 0.95,
+              },
+            });
+          }
+
+          // 11. Highlight boundary outlines with subtle cyan if supported by basemap
           const boundaryLayerNames = ['boundary_country', 'admin_country', 'boundary', 'admin-0-boundary'];
           boundaryLayerNames.forEach((layerName) => {
-            if (mapInstance && mapInstance.getLayer(layerName)) {
+            if (currentMap.getLayer(layerName)) {
               try {
-                mapInstance.setPaintProperty(layerName, 'line-color', '#22d3ee');
-                mapInstance.setPaintProperty(layerName, 'line-opacity', 0.25);
+                currentMap.setPaintProperty(layerName, 'line-color', '#22d3ee');
+                currentMap.setPaintProperty(layerName, 'line-opacity', 0.25);
               } catch {
                 // Ignore if line properties differ
               }
             }
           });
 
-          // Interactive click on country dots
-          mapInstance.on('click', 'stress-cores', (e: maplibregl.MapLayerMouseEvent) => {
-            if (e.features && e.features[0]) {
-              const props = e.features[0].properties;
-              if (props && props.id) {
-                handleSelectCountry(props.id);
+          // Interactive clicks on all country data layers
+          const countryClickableLayers = ['stress-cores', 'drought-cores', 'groundwater-cores'];
+          countryClickableLayers.forEach((layerId) => {
+            currentMap.on('click', layerId, (e: maplibregl.MapLayerMouseEvent) => {
+              if (e.features && e.features[0]) {
+                const props = e.features[0].properties;
+                if (props && props.id) {
+                  handleSelectCountry(props.id);
+                }
               }
-            }
-          });
+            });
 
-          mapInstance.on('mouseenter', 'stress-cores', () => {
-            if (mapInstance) mapInstance.getCanvas().style.cursor = 'pointer';
-          });
+            currentMap.on('mouseenter', layerId, () => {
+              currentMap.getCanvas().style.cursor = 'pointer';
+            });
 
-          mapInstance.on('mouseleave', 'stress-cores', () => {
-            if (mapInstance) mapInstance.getCanvas().style.cursor = '';
+            currentMap.on('mouseleave', layerId, () => {
+              currentMap.getCanvas().style.cursor = '';
+            });
           });
 
           // Interactive click on crisis points
-          mapInstance.on('click', 'crisis-points', (e: maplibregl.MapLayerMouseEvent) => {
+          currentMap.on('click', 'crisis-points', (e: maplibregl.MapLayerMouseEvent) => {
             if (e.features && e.features[0]) {
               const props = e.features[0].properties;
               if (props && props.id) {
@@ -312,15 +493,15 @@ export const WaterCrisisMap: React.FC = () => {
             }
           });
 
-          mapInstance.on('mouseenter', 'crisis-points', () => {
-            if (mapInstance) mapInstance.getCanvas().style.cursor = 'pointer';
+          currentMap.on('mouseenter', 'crisis-points', () => {
+            currentMap.getCanvas().style.cursor = 'pointer';
           });
 
-          mapInstance.on('mouseleave', 'crisis-points', () => {
-            if (mapInstance) mapInstance.getCanvas().style.cursor = '';
+          currentMap.on('mouseleave', 'crisis-points', () => {
+            currentMap.getCanvas().style.cursor = '';
           });
 
-          mapInstance.resize();
+          currentMap.resize();
           setMapState({ status: 'loaded', error: null });
         } catch (layerErr) {
           console.error('Failed to configure map layers:', layerErr);
@@ -433,32 +614,46 @@ export const WaterCrisisMap: React.FC = () => {
     };
   }, [retryKey, handleSelectCountry]);
 
-  // Update layer visibility dynamically
+  // Update layer visibility dynamically when checks change
   useEffect(() => {
     if (!map.current || mapState.status !== 'loaded') return;
     const m = map.current;
     if (!m.isStyleLoaded()) return;
 
+    // 1. Water Stress Check
+    const stressVisibility = layers.waterStress ? 'visible' : 'none';
     if (m.getLayer('stress-halos')) {
-      m.setLayoutProperty(
-        'stress-halos',
-        'visibility',
-        layers.waterStress ? 'visible' : 'none'
-      );
+      m.setLayoutProperty('stress-halos', 'visibility', stressVisibility);
     }
     if (m.getLayer('stress-cores')) {
-      m.setLayoutProperty(
-        'stress-cores',
-        'visibility',
-        layers.waterStress ? 'visible' : 'none'
-      );
+      m.setLayoutProperty('stress-cores', 'visibility', stressVisibility);
+    }
+
+    // 2. Drought Risk Check
+    const droughtVisibility = layers.droughtRisk ? 'visible' : 'none';
+    if (m.getLayer('drought-halos')) {
+      m.setLayoutProperty('drought-halos', 'visibility', droughtVisibility);
+    }
+    if (m.getLayer('drought-cores')) {
+      m.setLayoutProperty('drought-cores', 'visibility', droughtVisibility);
+    }
+
+    // 3. Groundwater Depletion Check
+    const gwVisibility = layers.groundwaterDepletion ? 'visible' : 'none';
+    if (m.getLayer('groundwater-halos')) {
+      m.setLayoutProperty('groundwater-halos', 'visibility', gwVisibility);
+    }
+    if (m.getLayer('groundwater-cores')) {
+      m.setLayoutProperty('groundwater-cores', 'visibility', gwVisibility);
+    }
+
+    // 4. Historical Crises Check
+    const crisisVisibility = layers.historicalCrises ? 'visible' : 'none';
+    if (m.getLayer('crisis-halos')) {
+      m.setLayoutProperty('crisis-halos', 'visibility', crisisVisibility);
     }
     if (m.getLayer('crisis-points')) {
-      m.setLayoutProperty(
-        'crisis-points',
-        'visibility',
-        layers.historicalCrises ? 'visible' : 'none'
-      );
+      m.setLayoutProperty('crisis-points', 'visibility', crisisVisibility);
     }
   }, [layers, mapState.status]);
 
@@ -493,41 +688,49 @@ export const WaterCrisisMap: React.FC = () => {
   return (
     <section
       id="crisis-map"
-      className="py-24 bg-[#07111F] relative overflow-hidden select-none"
+      className="py-16 md:py-20 bg-[#07111F] relative overflow-hidden select-none"
     >
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/3 w-[600px] h-[400px] bg-cyan-950/20 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Introduction */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-500/40 backdrop-blur-md uppercase mb-4 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-500/40 backdrop-blur-md uppercase mb-3 shadow-[0_0_15px_rgba(34,211,238,0.25)]">
             <Droplet className="w-3.5 h-3.5 fill-cyan-400/20" />
             <span>GLOBAL WATER MONITORING</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
             THE CRISIS HAS{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-amber-500 drop-shadow-[0_0_25px_rgba(245,158,11,0.35)]">
               NO BORDERS.
             </span>
           </h2>
 
-          <p className="text-slate-300 text-sm sm:text-base mt-3 max-w-2xl mx-auto font-normal leading-relaxed">
+          <p className="text-slate-300 text-xs sm:text-sm mt-2.5 max-w-2xl mx-auto font-normal leading-relaxed">
             Explore the regions where water is becoming increasingly scarce. Every point on this
             map represents a real challenge facing communities, ecosystems and future generations.
           </p>
 
-          <div className="inline-flex items-center gap-2 mt-4 px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 font-mono">
+          <div className="inline-flex items-center gap-2 mt-3 px-3 py-1 rounded-full bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 font-mono">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
             <span>Verified Sources: WRI Aqueduct 3.0 &bull; UN-Water &bull; World Bank Open Data</span>
           </div>
         </div>
 
         {/* Large Interactive World Map Stage */}
-        <div className="relative w-full h-[620px] sm:h-[680px] rounded-3xl overflow-hidden border border-cyan-500/30 bg-[#040b14] shadow-[0_25px_70px_rgba(0,0,0,0.85)]">
+        <div className="relative w-full h-[700px] sm:h-[780px] lg:h-[840px] rounded-3xl overflow-hidden border border-cyan-500/30 bg-[#040b14] shadow-[0_25px_70px_rgba(0,0,0,0.85)]">
           {/* MapLibre WebGL Canvas Container */}
-          <div ref={mapContainer} className="w-full h-full min-h-[500px]" />
+          <div ref={mapContainer} className="w-full h-full min-h-[600px]" />
+
+          {/* Floating Guidance Banner when no country is actively focused */}
+          {!selectedCountryId && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-15 hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-950/80 border border-cyan-500/35 text-slate-200 text-xs font-medium backdrop-blur-md shadow-xl pointer-events-none">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>Click any country dot or crisis hotspot to inspect water metrics</span>
+            </div>
+          )}
 
           {/* Map Loading State */}
           {mapState.status === 'loading' && (

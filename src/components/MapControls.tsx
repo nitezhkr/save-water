@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, Search, MapPin, CheckSquare, Square } from 'lucide-react';
+import { Layers, Search, MapPin, CheckSquare, Square, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WaterRiskLegend } from './WaterRiskLegend';
 import countriesData from '../data/countries.json';
 
@@ -22,8 +22,11 @@ export const MapControls: React.FC<MapControlsProps> = ({
   onToggleLayer,
   onSelectCountry,
 }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const activeCount = Object.values(layers).filter(Boolean).length;
 
   const filteredCountries = searchQuery.trim()
     ? countriesData.filter((c) =>
@@ -32,13 +35,37 @@ export const MapControls: React.FC<MapControlsProps> = ({
       )
     : [];
 
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => setIsCollapsed(false)}
+        className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-b from-[#0a1829]/95 to-[#071322]/95 border border-cyan-500/40 text-cyan-300 text-xs font-semibold backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.85)] hover:border-cyan-400 hover:text-white transition-all cursor-pointer group"
+        title="Show map controls & layers"
+      >
+        <Layers className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+        <span>Map Layers ({activeCount} Active)</span>
+        <ChevronRight className="w-3.5 h-3.5 text-cyan-400/70" />
+      </button>
+    );
+  }
+
   return (
-    <div className="w-full sm:w-72 rounded-2xl bg-gradient-to-b from-[#0a1829]/90 to-[#071322]/95 border border-cyan-500/30 p-5 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] text-slate-200">
-      {/* 1. Map Layers Section */}
-      <div className="mb-5">
-        <div className="flex items-center gap-2 mb-3.5 text-xs font-mono uppercase tracking-[0.2em] text-cyan-400">
-          <Layers className="w-3.5 h-3.5" />
-          <span>MAP LAYERS</span>
+    <div className="w-full sm:w-72 rounded-2xl bg-gradient-to-b from-[#0a1829]/95 to-[#071322]/95 border border-cyan-500/30 p-4 sm:p-5 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-slate-200 animate-in fade-in duration-200">
+      {/* 1. Map Layers Section Header */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-cyan-400">
+            <Layers className="w-3.5 h-3.5" />
+            <span>MAP LAYERS</span>
+          </div>
+          <button
+            onClick={() => setIsCollapsed(true)}
+            title="Minimize panel for larger map view"
+            aria-label="Minimize panel"
+            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
         </div>
 
         <div className="space-y-2">
