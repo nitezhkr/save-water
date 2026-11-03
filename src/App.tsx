@@ -4,9 +4,9 @@ import { Earth2050Hero } from './components/Earth2050Hero';
 import { WaterVsPopulation } from './components/WaterVsPopulation';
 import { RealWorldExamples } from './components/RealWorldExamples';
 import { WaterCrisisMap } from './components/WaterCrisisMap';
+import { FutureSolutionsSection } from './components/FutureSolutionsSection';
 import { DayIn2050 } from './components/DayIn2050';
 import { ThenVs2050 } from './components/ThenVs2050';
-import { FutureNotInevitable } from './components/FutureNotInevitable';
 import { Calculator2050 } from './components/Calculator2050';
 import { EveryDropPledgeSection } from './components/EveryDropPledgeSection';
 import { EveryDropFooter } from './components/EveryDropFooter';
@@ -60,16 +60,16 @@ export function App() {
         {/* 5. Section 04: The Global Water Crisis Map (MapLibre + OpenFreeMap + WRI + World Bank) */}
         <WaterCrisisMap />
 
-        {/* 6. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
+        {/* 6. Solutions: The Future Is Not Written Yet (Interactive Solutions & Action Choices) */}
+        <FutureSolutionsSection />
+
+        {/* 7. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
         <DayIn2050 />
 
-        {/* 6. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
+        {/* 8. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
         <ThenVs2050 />
 
-        {/* 7. The Choice Is Ours: But This Future Is Not Inevitable (4 Action Pillars) */}
-        <FutureNotInevitable />
-
-        {/* 7. Your Impact: Calculate Your Water Footprint */}
+        {/* 9. Your Impact: Calculate Your Water Footprint */}
         <Calculator2050 />
 
         {/* 8. Take Action: Take the Every Drop Pledge */}
