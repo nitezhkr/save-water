@@ -41,7 +41,7 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
       if (!sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       // Calculate how far into the section the user has scrolled
       const totalScrollable = rect.height + windowHeight;
       const currentScroll = windowHeight - rect.top;
@@ -239,11 +239,10 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
           <div className="space-y-8 sm:space-y-10 text-center sm:text-left">
             {/* Stanza 1 */}
             <div
-              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${
-                activeStanza >= 1
+              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 1
                   ? 'bg-cyan-950/30 border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] opacity-100 translate-y-0'
                   : 'bg-transparent border-transparent opacity-40 translate-y-2'
-              }`}
+                }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-cyan-400 block mb-2">
                 STANZA I · CLEAN WATER
@@ -255,11 +254,10 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
 
             {/* Stanza 2 */}
             <div
-              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${
-                activeStanza >= 2
+              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 2
                   ? 'bg-teal-950/30 border-teal-500/30 shadow-[0_0_25px_rgba(45,212,191,0.15)] opacity-100 translate-y-0'
                   : 'bg-transparent border-transparent opacity-40 translate-y-2'
-              }`}
+                }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-teal-400 block mb-2">
                 STANZA II · LIVING NATURE
@@ -271,11 +269,10 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
 
             {/* Stanza 3 */}
             <div
-              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${
-                activeStanza >= 3
+              className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 3
                   ? 'bg-amber-950/20 border-amber-500/30 shadow-[0_0_25px_rgba(251,191,36,0.12)] opacity-100 translate-y-0'
                   : 'bg-transparent border-transparent opacity-40 translate-y-2'
-              }`}
+                }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-amber-300 block mb-2">
                 STANZA III · THE TURNING POINT
@@ -310,11 +307,10 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
                   key={step}
                   type="button"
                   onClick={() => setActiveStanza(step)}
-                  className={`w-7 h-7 rounded-full text-xs font-mono font-bold transition-all ${
-                    activeStanza >= step
+                  className={`w-7 h-7 rounded-full text-xs font-mono font-bold transition-all ${activeStanza >= step
                       ? 'bg-cyan-400 text-slate-950 shadow-[0_0_8px_rgba(34,211,238,0.8)]'
                       : 'text-slate-400 hover:text-white'
-                  }`}
+                    }`}
                 >
                   0{step}
                 </button>
@@ -323,122 +319,7 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
           </div>
         </div>
 
-        {/* 3. Visual Transition from a Dry Landscape into a Green, Thriving World */}
-        <div className="mt-16 sm:mt-20">
-          <div className="text-center mb-6">
-            <span className="text-[11px] font-bold tracking-[0.25em] text-cyan-400 uppercase block mb-1">
-              THE TRANSFORMATION IN REAL TIME
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-              From Scorched Drought to a Flourishing Earth
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl mx-auto">
-              Drag the interactive slider below to witness how our decisions transform parched cracked ground into a thriving, water-abundant oasis.
-            </p>
-          </div>
 
-          {/* Before/After Split Viewer Container */}
-          <div
-            ref={sliderContainerRef}
-            onMouseDown={handleMouseDown}
-            onTouchMove={handleTouchMove}
-            className="relative w-full aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden border border-cyan-500/40 shadow-[0_20px_60px_rgba(0,0,0,0.8)] cursor-ew-resize select-none group"
-          >
-            {/* Background: 100% Green, Thriving World */}
-            <img
-              src="/assets/letter/transition_green_16_9.jpg"
-              alt="Green thriving river valley 2050"
-              className="absolute inset-0 w-full h-full object-cover object-center select-none"
-            />
-
-            {/* Foreground: Dry Parched Landscape Clipped to sliderPosition */}
-            <div
-              className="absolute inset-0 overflow-hidden"
-              style={{ width: `${sliderPosition}%` }}
-            >
-              <img
-                src="/assets/letter/transition_dry_16_9.jpg"
-                alt="Dry cracked scorched landscape"
-                className="absolute inset-0 w-full h-full object-cover object-center select-none"
-                style={{
-                  width: sliderContainerRef.current
-                    ? `${sliderContainerRef.current.clientWidth}px`
-                    : '100%',
-                  maxWidth: 'none',
-                }}
-              />
-              {/* Subtle sepia/heat haze overlay on the dry side */}
-              <div className="absolute inset-0 bg-amber-950/20 mix-blend-color-burn" />
-            </div>
-
-            {/* Dynamic Labels */}
-            {/* Left label: DRY LANDSCAPE */}
-            <div className="absolute top-4 left-4 z-20 px-3 py-1.5 rounded-full bg-slate-950/80 border border-amber-500/40 text-[11px] font-bold uppercase tracking-wider text-amber-300 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>Dry Parched Reality</span>
-            </div>
-
-            {/* Right label: GREEN THRIVING WORLD */}
-            <div className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full bg-slate-950/80 border border-emerald-500/40 text-[11px] font-bold uppercase tracking-wider text-emerald-300 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>Green Thriving 2050</span>
-            </div>
-
-            {/* Center Slider Divider Bar with glowing cyan handle */}
-            <div
-              className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 via-white to-cyan-400 z-30 shadow-[0_0_15px_rgba(34,211,238,0.9)]"
-              style={{ left: `${sliderPosition}%` }}
-            >
-              <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-cyan-400 text-slate-950 shadow-[0_0_25px_rgba(34,211,238,0.9)] flex items-center justify-center font-bold text-xs group-hover:scale-110 transition-transform">
-                <span className="select-none tracking-tighter">◀ ▶</span>
-              </div>
-            </div>
-
-            {/* Bottom Floating Control Bar */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2 rounded-full bg-slate-950/85 border border-cyan-500/40 backdrop-blur-md text-xs shadow-xl">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsAutoPlaying(!isAutoPlaying);
-                }}
-                className="flex items-center gap-1.5 text-cyan-300 hover:text-white font-semibold transition-colors"
-              >
-                {isAutoPlaying ? (
-                  <>
-                    <Pause className="w-3.5 h-3.5 fill-cyan-400" />
-                    <span>Pause Demo</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 fill-cyan-400" />
-                    <span>Auto Play</span>
-                  </>
-                )}
-              </button>
-
-              <span className="text-slate-600">|</span>
-
-              <span className="font-mono text-slate-300 text-[11px]">
-                {Math.round(sliderPosition)}% Scenery Transformed
-              </span>
-
-              <span className="text-slate-600">|</span>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSliderPosition(50);
-                }}
-                className="text-slate-400 hover:text-white transition-colors"
-                title="Reset to 50/50"
-              >
-                <RotateCcw className="w-3 h-3" />
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* 4. Final Message: "THE FUTURE IS IN OUR HANDS." */}
         <div className="mt-20 sm:mt-24 text-center">

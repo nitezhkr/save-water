@@ -126,32 +126,9 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
       aria-label="The Change Starts With You"
       className="relative py-20 lg:py-28 overflow-hidden bg-[#030914] text-white selection:bg-cyan-500 selection:text-white"
     >
-      {/* Background Scenic Landscape Layer */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img
-          src="/assets/pledge/pledge_bg.jpg"
-          alt="Tree planting community and water-secure landscape"
-          className="w-full h-full object-cover object-center select-none opacity-85"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = '/assets/pledge/pledge_mockup.jpg';
-          }}
-        />
-
-        {/* Top blend gradient with previous section */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#030914] via-[#030914]/85 to-transparent" />
-
-        {/* Bottom blend gradient */}
-        <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#030914] via-[#030914]/85 to-transparent" />
-
-        {/* Central radial shade so cards and text remain razor-sharp */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(3, 9, 20, 0.72) 0%, rgba(3, 9, 20, 0.35) 75%, transparent 100%)',
-          }}
-        />
-      </div>
+      {/* Background Ambient Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-cyan-950/20 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-96 h-96 bg-teal-950/15 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header (Centered) */}

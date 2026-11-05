@@ -62,13 +62,13 @@ export function App() {
         <WaterCrisisMap />
 
         {/* 6. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
-        <DayIn2050 />
+        {/* <DayIn2050 /> */}
 
         {/* 7. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
-        <ThenVs2050 />
+        {/* <ThenVs2050 /> */}
 
         {/* 8. Your Impact: Calculate Your Water Footprint */}
-        <Calculator2050 />
+        {/* <Calculator2050 /> */}
 
         {/* 9. Solutions: The Future Is Not Written Yet (Interactive Solutions & Action Choices) */}
         <FutureSolutionsSection />
