@@ -9,6 +9,7 @@ import { DayIn2050 } from './components/DayIn2050';
 import { ThenVs2050 } from './components/ThenVs2050';
 import { Calculator2050 } from './components/Calculator2050';
 import { EveryDropPledgeSection } from './components/EveryDropPledgeSection';
+import { DearFutureLetterSection } from './components/DearFutureLetterSection';
 import { EveryDropFooter } from './components/EveryDropFooter';
 import { SearchModal } from './components/SearchModal';
 
@@ -60,20 +61,23 @@ export function App() {
         {/* 5. Section 04: The Global Water Crisis Map (MapLibre + OpenFreeMap + WRI + World Bank) */}
         <WaterCrisisMap />
 
-        {/* 6. Solutions: The Future Is Not Written Yet (Interactive Solutions & Action Choices) */}
-        <FutureSolutionsSection />
-
-        {/* 7. Take Action: The Change Starts With You (Pledge & Global Movement) */}
-        <EveryDropPledgeSection />
-
-        {/* 8. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
+        {/* 6. A Day in 2050 (Drinking, Cooking, Bathing, Farming) */}
         <DayIn2050 />
 
-        {/* 9. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
+        {/* 7. THEN vs 2050: The Same Place. A Different Time (Interactive Slider) */}
         <ThenVs2050 />
 
-        {/* 10. Your Impact: Calculate Your Water Footprint */}
+        {/* 8. Your Impact: Calculate Your Water Footprint */}
         <Calculator2050 />
+
+        {/* 9. Solutions: The Future Is Not Written Yet (Interactive Solutions & Action Choices) */}
+        <FutureSolutionsSection />
+
+        {/* 10. Take Action: The Change Starts With You (Pledge & Global Movement) */}
+        <EveryDropPledgeSection />
+
+        {/* 11. Last Section: A Cinematic Letter to the Future Generation */}
+        <DearFutureLetterSection onKeepMovementAlive={scrollToPledge} />
       </main>
 
       {/* 9. Footer */}
