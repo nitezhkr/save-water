@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Users,
   Droplet,
@@ -20,6 +20,15 @@ import {
   downloadPledgeCardJpg,
   sharePledgeCardJpg,
 } from '../utils/generatePledgeCard';
+import {
+  fetchPledgeCount,
+  fetchRecentPledges,
+  submitPledgeToSupabase,
+  subscribeToLivePledges,
+  getLocalPledgeStatus,
+  BASE_PLEDGE_COUNT,
+  type RecentPledge,
+} from '../services/pledgeService';
 
 interface PledgeOption {
   id: string;
@@ -59,7 +68,8 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
 }) => {
   // Option 1 ("Save water every day") checked by default to match provided mockup
   const [checkedIds, setCheckedIds] = useState<string[]>(['daily']);
-  const [pledgeCount, setPledgeCount] = useState<number>(1248320);
+  const [pledgeCount, setPledgeCount] = useState<number>(BASE_PLEDGE_COUNT);
+  const [recentPledges, setRecentPledges] = useState<RecentPledge[]>([]);
   const [hasPledged, setHasPledged] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>('');
@@ -72,20 +82,84 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
   // Live Canvas Preview Reference
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
+  // 1. Initial Load: Sync from Supabase & check device localStorage
+  useEffect(() => {
+    // Check if user already pledged on this device
+    const local = getLocalPledgeStatus();
+    if (local.hasPledged) {
+      setHasPledged(true);
+      if (local.userName) setUserName(local.userName);
+      if (local.guardianTitle) setGuardianTitle(local.guardianTitle);
+    }
+
+    // Fetch live count from Supabase
+    fetchPledgeCount().then((count) => {
+      setPledgeCount(count);
+    });
+
+    // Fetch recent people who pledged from Supabase
+    fetchRecentPledges(8).then((list) => {
+      setRecentPledges(list);
+    });
+
+    // Real-time subscription: animates count & recent list live when any visitor pledges
+    const unsubscribe = subscribeToLivePledges((newCount) => {
+      setPledgeCount(newCount);
+      fetchRecentPledges(8).then((list) => setRecentPledges(list));
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Combine real Supabase pledges with community champions so loop scrolls seamlessly
+  const loopingPledges = useMemo(() => {
+    const communityFallbacks: RecentPledge[] = [
+      { id: 'f1', user_name: 'Elena Rostova', guardian_title: 'River Protector' },
+      { id: 'f2', user_name: 'Alex Morgan', guardian_title: 'Earth Guardian 2050' },
+      { id: 'f3', user_name: 'Marcus Chen', guardian_title: 'Clean Water Pioneer' },
+      { id: 'f4', user_name: 'Sarah Jenkins', guardian_title: 'Aquifer Ally' },
+      { id: 'f5', user_name: 'David Okafor', guardian_title: 'Earth Guardian 2050' },
+      { id: 'f6', user_name: 'Priya Sharma', guardian_title: 'River Protector' },
+      { id: 'f7', user_name: 'Lucas Silva', guardian_title: 'Clean Water Pioneer' },
+    ];
+
+    const combined = [...recentPledges];
+    communityFallbacks.forEach((fb) => {
+      if (!combined.some((p) => p.user_name.toLowerCase() === fb.user_name.toLowerCase())) {
+        combined.push(fb);
+      }
+    });
+    return combined;
+  }, [recentPledges]);
+
+  // The latest person who pledged
+  const latestPledge = recentPledges[0] || loopingPledges[0];
+
   const toggleOption = (optId: string) => {
     setCheckedIds((prev) =>
       prev.includes(optId) ? prev.filter((id) => id !== optId) : [...prev, optId]
     );
   };
 
-  const handleTakePledge = () => {
+  // 2. Submit Pledge: saves to Supabase and increments live counter
+  const handleTakePledge = async () => {
     // Check all options
     setCheckedIds(pledgeOptions.map((opt) => opt.id));
 
-    if (!hasPledged) {
-      setPledgeCount((prev) => prev + 1);
-      setHasPledged(true);
-    }
+    // Submit to Supabase
+    const activeCommitments = checkedIds.length > 0
+      ? checkedIds
+      : pledgeOptions.map((opt) => opt.id);
+
+    const result = await submitPledgeToSupabase({
+      userName: userName.trim() || 'Alex Morgan',
+      guardianTitle,
+      commitments: activeCommitments,
+    });
+
+    setPledgeCount(result.totalCount);
+    setHasPledged(true);
+    fetchRecentPledges(8).then((list) => setRecentPledges(list));
 
     // Launch celebratory cyan & teal confetti explosion
     confetti({
@@ -116,7 +190,7 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
     });
   }, [showCardModal, userName, guardianTitle, checkedIds, pledgeCount]);
 
-  // Download high-resolution JPG card
+  // Download high-resolution JPG card & ensure user's entered name is saved to Supabase
   const handleDownloadCard = async () => {
     setIsDownloading(true);
     try {
@@ -124,10 +198,21 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
         .filter((opt) => checkedIds.includes(opt.id))
         .map((opt) => `✓ ${opt.label}`);
 
-      await downloadPledgeCardJpg({
-        userName,
+      // Always save or update the real entered name to Supabase
+      const result = await submitPledgeToSupabase({
+        userName: userName.trim() || 'Alex Morgan',
         guardianTitle,
-        pledgeNumber: pledgeCount,
+        commitments: activeLabels,
+      });
+
+      setPledgeCount(result.totalCount);
+      setHasPledged(true);
+      fetchRecentPledges(8).then((list) => setRecentPledges(list));
+
+      await downloadPledgeCardJpg({
+        userName: userName.trim() || 'Alex Morgan',
+        guardianTitle,
+        pledgeNumber: result.totalCount,
         commitments: activeLabels.length > 0 ? activeLabels : undefined,
         websiteUrl: typeof window !== 'undefined' ? window.location.host || 'everydrop.earth' : 'everydrop.earth',
       });
@@ -153,10 +238,18 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
       .filter((opt) => checkedIds.includes(opt.id))
       .map((opt) => `✓ ${opt.label}`);
 
-    const shared = await sharePledgeCardJpg({
-      userName,
+    // Ensure entered name is saved to Supabase
+    const result = await submitPledgeToSupabase({
+      userName: userName.trim() || 'Alex Morgan',
       guardianTitle,
-      pledgeNumber: pledgeCount,
+      commitments: activeLabels,
+    });
+    fetchRecentPledges(8).then((list) => setRecentPledges(list));
+
+    const shared = await sharePledgeCardJpg({
+      userName: userName.trim() || 'Alex Morgan',
+      guardianTitle,
+      pledgeNumber: result.totalCount,
       commitments: activeLabels.length > 0 ? activeLabels : undefined,
       websiteUrl: typeof window !== 'undefined' ? window.location.host || 'everydrop.earth' : 'everydrop.earth',
     });
@@ -170,7 +263,7 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
   const handleShareMovement = async () => {
     const shareData = {
       title: 'Every Drop — The Change Starts With You',
-      text: 'I just took the Water Pledge to save our water future for 2050. Join 1,248,000+ people taking action today!',
+      text: `I just took the Water Pledge to save our water future for 2050. Join ${pledgeCount.toLocaleString()}+ people taking action today!`,
       url: window.location.href,
     };
 
@@ -234,8 +327,61 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
           </p>
         </div>
 
+        {/* ============================================================== */}
+        {/* LIVE TICKER / INFINITE LOOP MARQUEE OF NAMES WHO PLEDGED */}
+        {/* ============================================================== */}
+        <div className="mt-10 max-w-5xl mx-auto">
+          {/* Top highlight bar: Latest Person Who Pledged */}
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2 rounded-2xl bg-[#061826]/70 border border-cyan-500/25 backdrop-blur-md mb-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-400"></span>
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-wider text-slate-300">
+                LATEST PLEDGE:
+              </span>
+              <span className="font-bold text-white">
+                {latestPledge.user_name}
+              </span>
+              <span className="hidden sm:inline text-cyan-300/80 font-mono text-[11px]">
+                · {latestPledge.guardian_title}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span>LIVE SUPABASE SYNC</span>
+            </div>
+          </div>
+
+          {/* Continuous Infinite Scrolling Loop of Names */}
+          <div className="relative overflow-hidden rounded-2xl bg-[#030e1a]/80 border border-cyan-500/20 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.5)] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="flex gap-4 animate-pledge-loop whitespace-nowrap will-change-transform">
+              {/* Duplicate array twice for seamless endless marquee */}
+              {[...loopingPledges, ...loopingPledges].map((item, index) => (
+                <div
+                  key={`${item.id}-${index}`}
+                  className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#072036]/90 border border-cyan-500/30 hover:border-cyan-400 text-xs shadow-sm transition-all group select-none shrink-0"
+                >
+                  <div className="w-5 h-5 rounded-full bg-cyan-400/20 border border-cyan-400/50 flex items-center justify-center text-[10px] font-bold text-cyan-300">
+                    {item.user_name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="font-bold text-white group-hover:text-cyan-200 transition-colors">
+                    {item.user_name}
+                  </span>
+                  <span className="text-[10px] font-semibold text-cyan-300/90 bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-500/20">
+                    {item.guardian_title}
+                  </span>
+                  <Check className="w-3.5 h-3.5 text-teal-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Main Content: Left Floating Crystal Droplet + 3 Pledge Cards Grid */}
-        <div className="mt-12 lg:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           {/* Left Column: 3D Crystal Water Droplet with Earth inside */}
           <div className="hidden lg:flex lg:col-span-3 flex-col items-center justify-center relative select-none">
             <div className="relative w-56 xl:w-64 aspect-[3/4] flex items-center justify-center group">
@@ -361,14 +507,30 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
                   Be part of a growing community that's choosing a water-secure future.
                 </p>
 
-                {/* Large Pledge Counter */}
+                {/* Large Live Supabase Pledge Counter */}
                 <div className="mt-6 text-center">
-                  <div className="text-3xl sm:text-4xl font-black text-cyan-300 tracking-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                  <div className="text-3xl sm:text-4xl font-black text-cyan-300 tracking-tight drop-shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-all duration-500">
                     {formattedPledgeCount}
                   </div>
                   <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-300 block mt-1">
                     PEOPLE HAVE TAKEN THE PLEDGE
                   </span>
+                </div>
+
+                {/* Prominent Latest Pledge Card in Card 02 */}
+                <div className="mt-4 p-2.5 rounded-xl bg-cyan-950/50 border border-cyan-500/30 text-left flex items-center gap-2.5 shadow-[0_0_12px_rgba(34,211,238,0.15)]">
+                  <div className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[9px] font-mono text-cyan-300/80 uppercase tracking-wider block">
+                      LATEST PLEDGE REGISTERED:
+                    </span>
+                    <span className="text-xs font-bold text-white truncate block">
+                      {latestPledge.user_name}
+                      <span className="text-teal-300 font-normal ml-1.5 text-[11px]">
+                        ({latestPledge.guardian_title})
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -630,7 +792,7 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
         </div>
       )}
 
-      {/* Floating droplet CSS keyframe */}
+      {/* Floating droplet & Infinite Marquee CSS keyframes */}
       <style>{`
         @keyframes floatDroplet {
           0%, 100% {
@@ -639,6 +801,23 @@ export const EveryDropPledgeSection: React.FC<EveryDropPledgeSectionProps> = ({
           50% {
             transform: translateY(-8px) rotate(1deg);
           }
+        }
+
+        @keyframes pledgeMarqueeLoop {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-pledge-loop {
+          animation: pledgeMarqueeLoop 36s linear infinite;
+        }
+
+        .animate-pledge-loop:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </section>
