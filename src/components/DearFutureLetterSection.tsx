@@ -6,34 +6,30 @@ import {
   Share2,
   Check,
   Compass,
-  Play,
-  Pause,
-  RotateCcw,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface DearFutureLetterSectionProps {
   id?: string;
   onKeepMovementAlive?: () => void;
+  videoSrc?: string;
 }
 
 export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = ({
   id = 'dear-future',
   onKeepMovementAlive,
+  videoSrc = '/assets/earth.mp4',
 }) => {
-  // Scroll reveal progress for letter appearance
+  // Section and video references
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // States
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [activeStanza, setActiveStanza] = useState<number>(3); // 1, 2, or 3 (defaults to fully revealed if scrolled)
-
-  // Interactive dry-to-green transformation slider (0 to 100)
-  const [sliderPosition, setSliderPosition] = useState<number>(55);
-  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
-  const isDragging = useRef<boolean>(false);
-  const sliderContainerRef = useRef<HTMLDivElement>(null);
-
-  // Share state
+  const [activeStanza, setActiveStanza] = useState<number>(3); // 1, 2, or 3
   const [copied, setCopied] = useState<boolean>(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
+  const [hasVideoError, setHasVideoError] = useState<boolean>(false);
 
   // Track scroll position inside the section to gradually illuminate the letter
   useEffect(() => {
@@ -63,61 +59,27 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Automatic glide animation for visual landscape transition
+  // Performance optimization for low-end PCs:
+  // Pause video decoding when the section is not in the viewport to save 100% CPU/GPU and battery
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    let step = 0.5;
-    let current = sliderPosition;
+    const video = videoRef.current;
+    if (!video || !sectionRef.current) return;
 
-    const interval = setInterval(() => {
-      current += step;
-      if (current >= 95) {
-        step = -0.5;
-      } else if (current <= 5) {
-        step = 0.5;
-      }
-      setSliderPosition(current);
-    }, 20);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // Autoplay policy fallback
+          });
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.05 }
+    );
 
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, sliderPosition]);
-
-  // Drag interaction for landscape transition slider
-  const handleSliderMove = (clientX: number) => {
-    if (!sliderContainerRef.current) return;
-    const rect = sliderContainerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(percentage);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    isDragging.current = true;
-    setIsAutoPlaying(false);
-    handleSliderMove(e.clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setIsAutoPlaying(false);
-    handleSliderMove(e.touches[0].clientX);
-  };
-
-  useEffect(() => {
-    const handleMouseUp = () => {
-      isDragging.current = false;
-    };
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging.current) {
-        handleSliderMove(e.clientX);
-      }
-    };
-
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
   }, []);
 
   // CTA Click: Keep the Movement Alive
@@ -151,7 +113,7 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
           url: window.location.href,
         });
         return;
-      } catch (e) {
+      } catch {
         // Fallback to clipboard
       }
     }
@@ -173,27 +135,60 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
       aria-label="A Letter to the Future Generation"
       className="relative py-28 sm:py-36 overflow-hidden bg-[#020611] text-white selection:bg-cyan-500 selection:text-white"
     >
-      {/* 1. Beautiful Earth-at-Sunrise Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none">
-        <img
-          src="/assets/letter/earth_sunrise_letter.jpg"
-          alt="Planet Earth from orbit at radiant sunrise"
-          className="w-full h-full object-cover object-center opacity-85 transition-transform duration-1000 scale-[1.02]"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = '/assets/earth_globe_bg.jpg';
-          }}
-        />
+      {/* ============================================================== */}
+      {/* 1. HARDWARE-ACCELERATED CINEMATIC SPACE VIDEO BACKGROUND */}
+      {/* (Runs directly on GPU video decoders with near 0% CPU on low-end PCs) */}
+      {/* ============================================================== */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden bg-[#01040a]">
+        {/* High-Performance Looping Space Video */}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          poster="/assets/letter/earth_sunrise_letter.jpg"
+          onLoadedData={() => setIsVideoLoaded(true)}
+          onError={() => setHasVideoError(true)}
+          className={`w-full h-full object-cover object-center scale-[1.02] filter contrast-[1.06] brightness-95 transition-opacity duration-1000 ${isVideoLoaded && !hasVideoError ? 'opacity-90' : 'opacity-0'
+            }`}
+        >
+          {videoSrc && <source src={videoSrc} type="video/mp4" />}
+          <source src="/assets/letter/earth_space.mp4" type="video/mp4" />
+          <source src="/assets/earth_space.mp4" type="video/mp4" />
+          <source src="/assets/letter/earth_space.webm" type="video/webm" />
+        </video>
 
-        {/* Cinematic deep-space darkening gradient from top */}
-        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#030914] via-[#020611]/80 to-transparent" />
+        {/* Fallback Image Layer (shown while loading or if video file is not yet placed) */}
+        {(!isVideoLoaded || hasVideoError) && (
+          <img
+            src="/assets/letter/earth_sunrise_letter.jpg"
+            alt="Planet Earth from orbit in space"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-85 transition-opacity duration-1000 scale-[1.02] animate-kenburns"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = '/assets/earth_globe_bg.jpg';
+            }}
+          />
+        )}
 
         {/* Ambient sunrise horizon glow in the center */}
-        <div className="absolute inset-0 bg-radial-[at_50%_70%] from-cyan-500/15 via-transparent to-[#020611]/80" />
+        <div className="absolute inset-0 bg-radial-[at_50%_70%] from-cyan-500/20 via-transparent to-[#020611]/80 pointer-events-none" />
+
+        {/* Deep space top darkening gradient (seamless transition from pledge section) */}
+        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#030914] via-[#020611]/85 to-transparent pointer-events-none" />
+
+        {/* Soft center lens filter keeping the letter card and line 328 commitment 100% readable */}
+        <div className="absolute inset-0 bg-radial-[at_50%_50%] from-[#020611]/50 via-[#020611]/30 to-transparent pointer-events-none" />
 
         {/* Soft bottom vignette into footer */}
-        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#020611] via-[#020611]/90 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#020611] via-[#020611]/90 to-transparent pointer-events-none" />
       </div>
 
+      {/* ============================================================== */}
+      {/* 2. SECTION CONTENT */}
+      {/* ============================================================== */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Letter Head Wax Seal & Time Capsule Header */}
         <div className="flex flex-col items-center text-center mb-10">
@@ -213,7 +208,7 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
           <div className="w-20 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full mt-4 shadow-[0_0_15px_rgba(34,211,238,0.8)]" />
         </div>
 
-        {/* 2. Large Letter Appearing Gradually As Visitors Scroll */}
+        {/* 3. Large Letter Appearing Gradually As Visitors Scroll */}
         <div className="relative rounded-3xl border border-cyan-500/30 bg-[#040e1b]/80 backdrop-blur-2xl p-6 sm:p-10 lg:p-14 shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden">
           {/* Subtle water droplet embossed watermark */}
           <div className="absolute -top-16 -right-16 w-80 h-80 opacity-5 pointer-events-none">
@@ -240,8 +235,8 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
             {/* Stanza 1 */}
             <div
               className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 1
-                  ? 'bg-cyan-950/30 border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] opacity-100 translate-y-0'
-                  : 'bg-transparent border-transparent opacity-40 translate-y-2'
+                ? 'bg-cyan-950/30 border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] opacity-100 translate-y-0'
+                : 'bg-transparent border-transparent opacity-40 translate-y-2'
                 }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-cyan-400 block mb-2">
@@ -255,8 +250,8 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
             {/* Stanza 2 */}
             <div
               className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 2
-                  ? 'bg-teal-950/30 border-teal-500/30 shadow-[0_0_25px_rgba(45,212,191,0.15)] opacity-100 translate-y-0'
-                  : 'bg-transparent border-transparent opacity-40 translate-y-2'
+                ? 'bg-teal-950/30 border-teal-500/30 shadow-[0_0_25px_rgba(45,212,191,0.15)] opacity-100 translate-y-0'
+                : 'bg-transparent border-transparent opacity-40 translate-y-2'
                 }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-teal-400 block mb-2">
@@ -270,8 +265,8 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
             {/* Stanza 3 */}
             <div
               className={`transition-all duration-700 p-4 sm:p-6 rounded-2xl border ${activeStanza >= 3
-                  ? 'bg-amber-950/20 border-amber-500/30 shadow-[0_0_25px_rgba(251,191,36,0.12)] opacity-100 translate-y-0'
-                  : 'bg-transparent border-transparent opacity-40 translate-y-2'
+                ? 'bg-amber-950/20 border-amber-500/30 shadow-[0_0_25px_rgba(251,191,36,0.12)] opacity-100 translate-y-0'
+                : 'bg-transparent border-transparent opacity-40 translate-y-2'
                 }`}
             >
               <span className="text-[10px] uppercase font-mono tracking-widest text-amber-300 block mb-2">
@@ -308,8 +303,8 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
                   type="button"
                   onClick={() => setActiveStanza(step)}
                   className={`w-7 h-7 rounded-full text-xs font-mono font-bold transition-all ${activeStanza >= step
-                      ? 'bg-cyan-400 text-slate-950 shadow-[0_0_8px_rgba(34,211,238,0.8)]'
-                      : 'text-slate-400 hover:text-white'
+                    ? 'bg-cyan-400 text-slate-950 shadow-[0_0_8px_rgba(34,211,238,0.8)]'
+                    : 'text-slate-400 hover:text-white'
                     }`}
                 >
                   0{step}
@@ -318,8 +313,6 @@ export const DearFutureLetterSection: React.FC<DearFutureLetterSectionProps> = (
             </div>
           </div>
         </div>
-
-
 
         {/* 4. Final Message: "THE FUTURE IS IN OUR HANDS." */}
         <div className="mt-20 sm:mt-24 text-center">
